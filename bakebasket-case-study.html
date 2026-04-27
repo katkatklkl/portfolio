@@ -4,259 +4,1058 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bake Basket — Katie Lei</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================
+       Bake Basket — Case Study v2
+    ========================================================= */
+
+    :root {
+      --bg:           #FAFAF9;
+      --bg-2:         #F4F3F0;
+      --bg-3:         #EAE8E3;
+      --rule:         #E5E3DD;
+      --rule-strong:  #D4D1C8;
+      --ink:          #1A1A1A;
+      --ink-2:        #4A4A48;
+      --ink-3:        #807E78;
+      --ink-4:        #B5B2A8;
+      --accent:       #C8543A;
+      --accent-soft:  #F8E8E2;
+      --success:      #2E7D4F;
+      --error:        #B94040;
+
+      --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+      --radius-sm:    6px;
+      --radius:       10px;
+      --radius-lg:    16px;
+
+      --shadow-sm:    0 1px 2px rgba(0,0,0,0.04);
+      --shadow:       0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.05);
+      --shadow-lg:    0 8px 24px -8px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.04);
+
+      --sidebar-w:    280px;
+      --content-max:  720px;
+      --wide-max:     1100px;
+
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'cv11', 'ss01', 'kern';
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* =========================================================
+       Top bar
+    ========================================================= */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 2rem;
+      background: rgba(250,250,249,0.85);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .topbar-left {
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .topbar-brand {
+      font-weight: 600; font-size: 0.95rem;
+      letter-spacing: -0.01em;
+    }
+    .topbar-crumb {
+      display: none;
+      font-size: 0.85rem; color: var(--ink-3);
+      align-items: center; gap: 0.5rem;
+    }
+    @media (min-width: 720px) {
+      .topbar-crumb { display: inline-flex; }
+    }
+    .topbar-crumb-sep { color: var(--ink-4); }
+    .topbar-crumb-current { color: var(--ink); font-weight: 500; }
+
+    .topbar-right {
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .topbar-link {
+      font-size: 0.85rem; color: var(--ink-2);
+      padding: 0.4rem 0.75rem; border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms;
+    }
+    .topbar-link:hover { background: var(--bg-2); color: var(--ink); }
+    .topbar-cta {
+      font-size: 0.85rem; font-weight: 500;
+      padding: 0.5rem 0.85rem;
+      background: var(--ink); color: var(--bg);
+      border-radius: var(--radius-sm);
+      transition: background 150ms;
+    }
+    .topbar-cta:hover { background: var(--ink-2); }
+
+    /* Reading progress */
+    .progress {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: transparent; z-index: 200;
+    }
+    .progress-bar {
+      height: 100%; width: 0%; background: var(--accent);
+      transition: width 80ms linear;
+    }
+
+    /* =========================================================
+       Hero
+    ========================================================= */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: var(--wide-max);
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--ink-2);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+    }
+    .hero-title {
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      font-weight: 600; line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+      max-width: 18ch; text-wrap: balance;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      line-height: 1.5;
+      color: var(--ink-2);
+      max-width: 56ch;
+      margin-bottom: 3rem;
+      text-wrap: pretty;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 1.5rem 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    @media (max-width: 720px) {
+      .hero-meta { grid-template-columns: repeat(2, 1fr); }
+    }
+    .hero-meta-item {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .hero-meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .hero-meta-value {
+      font-size: 0.92rem; font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* Cover image */
+    .cover-wrap {
+      max-width: var(--wide-max);
+      margin: 0 auto 4rem;
+      padding: 0 2rem;
+    }
+    .cover {
+      width: 100%; height: auto; display: block;
+      border-radius: var(--radius-lg);
+      background: var(--bg-2);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* =========================================================
+       Two-column layout: sticky TOC + content
+    ========================================================= */
+    .layout {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; gap: 0; }
+    }
+
+    /* TOC sidebar */
+    .toc {
+      position: sticky; top: 88px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+    @media (max-width: 980px) {
+      .toc { display: none; }
+    }
+    .toc-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; color: var(--ink-3);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.1rem;
+      border-left: 1px solid var(--rule);
+    }
+    .toc-list a {
+      display: block;
+      padding: 0.45rem 0 0.45rem 1rem;
+      margin-left: -1px;
+      border-left: 1px solid transparent;
+      font-size: 0.85rem;
+      color: var(--ink-3);
+      transition: color 150ms, border-color 150ms;
+    }
+    .toc-list a:hover { color: var(--ink); }
+    .toc-list a.is-active {
+      color: var(--ink);
+      border-left-color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Content column */
+    .content {
+      max-width: var(--content-max);
+      min-width: 0;
+    }
+
+    /* Sections */
+    .section {
+      padding: 3rem 0;
+      border-top: 1px solid var(--rule);
+      scroll-margin-top: 88px;
+    }
+    .section:first-child { border-top: none; padding-top: 0; }
+
+    .section-meta {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      letter-spacing: 0;
+    }
+    .section-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      color: var(--ink-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .section h2 {
+      font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+      font-weight: 600; line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+    .section h3 {
+      font-size: 1.05rem; font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 2.5rem 0 0.85rem;
+      color: var(--ink);
+    }
+    .section h4 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+    .section p {
+      font-size: 1rem; line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 64ch;
+    }
+    .section p + p { margin-top: 0.85rem; }
+    .section p strong { color: var(--ink); font-weight: 600; }
+
+    /* Summary grid */
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 720px) {
+      .summary { grid-template-columns: 1fr; }
+    }
+    .summary-cell {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .summary-cell:nth-child(2n) { border-right: none; }
+    .summary-cell:nth-last-child(-n+2) { border-bottom: none; }
+    @media (max-width: 720px) {
+      .summary-cell { border-right: none !important; border-bottom: 1px solid var(--rule) !important; }
+      .summary-cell:last-child { border-bottom: none !important; }
+    }
+    .summary-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    .summary-text {
+      font-size: 0.92rem;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    /* HMW callout */
+    .hmw {
+      margin: 1.5rem 0;
+      padding: 1.5rem 1.75rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      max-width: 64ch;
+    }
+    .hmw-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+    }
+    .hmw-text {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 720px) {
+      .stats { grid-template-columns: 1fr; }
+    }
+    .stat {
+      padding: 1.25rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    .stat-num {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--ink-3);
+      line-height: 1.4;
+    }
+
+    /* Numbered takeaway list */
+    .takeaways {
+      list-style: none;
+      display: flex; flex-direction: column;
+      counter-reset: tk;
+      margin: 1rem 0;
+    }
+    .takeaways li {
+      counter-increment: tk;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 0.75rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.95rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+    .takeaways li:last-child { border-bottom: none; }
+    .takeaways li::before {
+      content: counter(tk, decimal-leading-zero);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      padding-top: 1px;
+    }
+
+    /* Quote cards */
+    .quotes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 720px) {
+      .quotes { grid-template-columns: 1fr; }
+    }
+    .quote {
+      padding: 1.25rem 1.4rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      font-size: 0.92rem;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .quote-mark {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    /* Competitor logos */
+    .competitors {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    .competitor {
+      padding: 1.25rem 1rem;
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 16/9;
+    }
+    .competitor img {
+      max-width: 100%;
+      max-height: 50px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Comparison table */
+    .table-wrap {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.25rem 0;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    .table thead { background: var(--bg-2); }
+    .table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+      color: var(--ink-3);
+      border-bottom: 1px solid var(--rule);
+    }
+    .table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      color: var(--ink-2);
+    }
+    .table tr:last-child td { border-bottom: none; }
+    .table .yes { color: var(--success); font-weight: 600; }
+    .table .no  { color: var(--error); font-weight: 600; }
+    .table .opt { color: var(--ink-3); font-style: italic; }
+
+    /* Two col block */
+    .twocol {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .twocol { grid-template-columns: 1fr; } }
+    .twocol-block h4 {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* Persona */
+    .persona {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 1.75rem;
+      padding: 1.75rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) {
+      .persona { grid-template-columns: 1fr; }
+    }
+    .persona-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      background: var(--bg-3);
+    }
+    .persona-name {
+      font-size: 1.25rem; font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.25rem;
+    }
+    .persona-role {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink-3);
+      margin-bottom: 1rem;
+    }
+    .persona-bio {
+      font-size: 0.92rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+      margin-bottom: 1.25rem;
+    }
+    .persona-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 540px) { .persona-grid { grid-template-columns: 1fr; } }
+    .persona-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .persona-list li {
+      font-size: 0.82rem;
+      color: var(--ink-2);
+      line-height: 1.45;
+      padding-left: 0.85rem; position: relative;
+    }
+    .persona-list li::before {
+      content: '';
+      position: absolute; left: 0; top: 0.55em;
+      width: 4px; height: 1px;
+      background: var(--ink-3);
+    }
+    .persona-list-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Image grid */
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) {
+      .img-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .img-grid img {
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--bg-2);
+    }
+
+    .img-full {
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Findings cards */
+    .findings {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .findings { grid-template-columns: 1fr; } }
+    .finding {
+      padding: 1.25rem;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    .finding-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+    .finding h4 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .finding p {
+      font-size: 0.85rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* Iteration cards */
+    .iter {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      background: var(--bg);
+    }
+    .iter-head {
+      display: flex; align-items: baseline; gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg-2);
+    }
+    .iter-num {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+    }
+    .iter-title {
+      font-size: 1rem; font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .iter-body {
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+    .iter-body--single { grid-template-columns: 1fr; }
+    @media (max-width: 720px) {
+      .iter-body { grid-template-columns: 1fr; }
+    }
+    .iter-img-wrap {
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      display: flex; flex-direction: column;
+      gap: 0.75rem;
+      min-height: 0;
+    }
+    .iter-img-label {
+      display: inline-flex; align-self: flex-start;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--ink-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+    }
+    .iter-img-label--after { color: var(--accent); border-color: var(--accent); }
+    .iter-img-wrap img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+      flex: 1;
+      min-height: 0;
+    }
+    .iter-caption {
+      padding: 0 1.5rem 1.5rem;
+      font-size: 0.92rem;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    /* CTA button */
+    .cta-row {
+      display: flex; gap: 0.75rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.1rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem; font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms, border-color 150ms, transform 200ms var(--ease);
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .btn-primary:hover { background: var(--ink-2); }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+    .btn-secondary:hover { background: var(--bg-2); }
+
+    /* Bottom navigation */
+    .bottom-nav {
+      max-width: var(--wide-max);
+      margin: 4rem auto 0;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .bottom-nav-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9rem; color: var(--ink-2);
+      padding: 0.5rem 0;
+      transition: color 150ms;
+    }
+    .bottom-nav-link:hover { color: var(--ink); }
+    .bottom-nav-link svg { transition: transform 200ms var(--ease); }
+    .bottom-nav-link:hover svg { transform: translateX(2px); }
+
+    /* Footer */
+    .footer {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem;
+      color: var(--ink-3);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-links {
+      display: flex; gap: 1.25rem;
+    }
+    .footer-links a:hover { color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .topbar { padding: 0.75rem 1.25rem; }
+      .hero { padding: 3rem 1.25rem 2rem; }
+      .cover-wrap, .layout, .bottom-nav, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
-  <aside class="site-sidebar">
-    <div class="sidebar-top">
-      <a href="index.html" class="site-title">Katie Lei</a>
-      <nav class="site-nav">
-        <a href="index.html#intro">Intro</a>
-        <a href="index.html#work">Work</a>
-        <a href="index.html#about">About</a>
-        <a href="index.html#contact">Contact</a>
-      </nav>
-      <div class="social-links">
-        <a href="#" aria-label="LinkedIn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a href="#" aria-label="Dribbble">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 6.628 5.374 12 12 12 6.628 0 12-5.372 12-12 0-6.627-5.372-12-12-12zm7.92 5.58a10.1 10.1 0 0 1 2.306 6.423c-.338-.065-3.716-.754-7.116-.327-.077-.189-.146-.378-.231-.566-.208-.496-.438-1-.674-1.49 3.776-1.537 5.494-3.748 5.715-4.04zM12 1.999a10.1 10.1 0 0 1 6.92 2.742c-.189.265-1.733 2.327-5.39 3.7-1.685-3.093-3.553-5.627-3.84-6.018A10.18 10.18 0 0 1 12 2zm-4.27.724c.277.377 2.107 2.916 3.816 5.955-4.816 1.28-9.07 1.258-9.51 1.25A10.12 10.12 0 0 1 7.73 2.724zM1.927 12.012v-.26c.426.009 5.387.074 10.52-1.458.296.574.57 1.158.824 1.742-.134.038-.269.077-.4.12-5.308 1.715-8.124 6.398-8.36 6.813A10.074 10.074 0 0 1 1.927 12zm10.073 10.074c-2.608 0-5.005-.935-6.864-2.476.196-.4 2.439-4.726 8.285-6.756.022-.008.044-.014.065-.022 1.48 3.84 2.09 7.056 2.25 7.995a10.07 10.07 0 0 1-3.736.26zm5.59-1.565c-.112-.663-.673-3.726-2.057-7.512 3.207-.514 6.016.33 6.369.44a10.127 10.127 0 0 1-4.312 7.072z"/></svg>
-        </a>
-        <a href="#" aria-label="Behance">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029H23zm-7.726-5.025c.305-2.17 1.945-2.732 3.188-2.732 1.265 0 2.76.76 2.76 2.732H15zm-9.826 3.025H1V1h7.6c4.493 0 4.888 3.505 3.392 5.007 2.13.948 2.74 4.018.908 5.993zM5 6.8h2.987c1.504 0 1.504-2.3 0-2.3H5v2.3zm0 5.4h3.38c1.685 0 1.685-2.6 0-2.6H5v2.6z"/></svg>
-        </a>
+  <!-- Reading progress -->
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-brand">Katie Lei</a>
+      <span class="topbar-crumb">
+        <a href="index.html#work" class="topbar-link" style="padding:0">Work</a>
+        <span class="topbar-crumb-sep">/</span>
+        <span class="topbar-crumb-current">Bake Basket</span>
+      </span>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html#contact" class="topbar-link">Contact</a>
+      <a href="https://www.figma.com/proto/L8KWsWZbsNG2pA5q7rweKc/Bake-Casket-Proto?node-id=1-423&p=f&t=T84t41O7Q0S0YIgl-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A423" target="_blank" rel="noopener" class="topbar-cta">View prototype ↗</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Case study · 2025
+    </span>
+    <h1 class="hero-title">Helping beginner bakers commit to baking, one kit at a time.</h1>
+    <p class="hero-subtitle">A mobile e-commerce app for curated baking kits — designed to remove the friction of buying full ingredients, so beginners can enjoy baking without the waste or commitment.</p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Role</span>
+        <span class="hero-meta-value">Lead UI/UX Designer</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Timeline</span>
+        <span class="hero-meta-value">8 weeks · 2025</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Platform</span>
+        <span class="hero-meta-value">iOS &amp; Android</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Tools</span>
+        <span class="hero-meta-value">Figma, Miro</span>
       </div>
     </div>
-    <div class="sidebar-bottom">
-      <p class="copyright">© 2026 Katie Lei</p>
-    </div>
-  </aside>
+  </section>
 
-  <!-- MAIN CONTENT -->
-  <main class="site-main">
+  <!-- Cover -->
+  <div class="cover-wrap">
+    <img class="cover" src="images/bakebasket%20display.png" alt="Bake Basket app — final design overview" />
+  </div>
 
-    <!-- HERO -->
-    <section class="cs-hero">
-      <div class="cs-hero-inner">
+  <!-- Two-column layout -->
+  <div class="layout">
 
-        <a href="index.html#work" class="cs-back">
-          ← Back to Work
-        </a>
+    <!-- Sticky TOC -->
+    <aside class="toc" aria-label="Contents">
+      <p class="toc-label">Contents</p>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#summary" class="is-active">Summary</a></li>
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#competitive">Competitive analysis</a></li>
+        <li><a href="#persona">Persona</a></li>
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#ia">Information architecture</a></li>
+        <li><a href="#wireframes">Wireframes</a></li>
+        <li><a href="#ui">Visual design</a></li>
+        <li><a href="#prototype">Prototype</a></li>
+        <li><a href="#testing">Usability testing</a></li>
+        <li><a href="#iterations">Iterations</a></li>
+        <li><a href="#final">Final design</a></li>
+        <li><a href="#reflection">Reflection</a></li>
+      </ul>
+    </aside>
 
-        <span class="cs-tag">Mobile App &nbsp;·&nbsp; iOS &amp; Android</span>
-        <h1 class="cs-title">Bake Basket</h1>
-        <p class="cs-subtitle">A UX case study exploring how to reduce friction in the online baking kit shopping experience.</p>
+    <!-- Content -->
+    <article class="content">
 
-        <div class="cs-meta-row">
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Role</span>
-            <span class="cs-meta-value">UI/UX Design · User Research · Prototyping</span>
-          </div>
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Tools</span>
-            <span class="cs-meta-value">Figma · Miro</span>
-          </div>
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Platform</span>
-            <span class="cs-meta-value">iOS &amp; Android</span>
-          </div>
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Type</span>
-            <span class="cs-meta-value">E-commerce · Consumer App</span>
-          </div>
+      <!-- Summary -->
+      <section class="section" id="summary">
+        <div class="section-meta">
+          <span class="section-num">01</span>
+          <span class="section-pill">Summary</span>
         </div>
+        <h2>At a glance</h2>
+        <p>Baking is a hobby that lives in moments — date nights, family afternoons, casual weekends — but buying full-sized ingredients to support those moments feels wasteful and intimidating. Bake Basket sells curated, pre-portioned kits so beginners can bake on impulse, without the leftover commitment.</p>
 
-        <img
-          class="cs-cover"
-          src="images/bakebasket%20display.png"
-          alt="Bake Basket app screens"
-        />
-      </div>
-    </section>
-
-    <div class="cs-body">
-
-      <!-- OVERVIEW -->
-      <section class="cs-section">
-        <span class="cs-section-label">Overview</span>
-        <h2>The Problem</h2>
-        <p>Baking is often enjoyed as a hobby or social activity — for date nights, family bonding, or casual gatherings — but these moments are occasional rather than routine. As a result, buying full ingredients can feel wasteful and impractical.</p>
-        <p>My goal was to create an app that addresses this by offering curated, ready-to-use kits that eliminate excess, reduce cost, and remove the pressure of long-term commitment. By combining guided recipe selection with thoughtfully portioned ingredients, the app creates a low-risk, enjoyable way to experience baking — whether alone or with others.</p>
-      </section>
-
-      <!-- CHALLENGE -->
-      <section class="cs-section">
-        <span class="cs-section-label">Challenge</span>
-        <h2>Reducing Decision Fatigue</h2>
-        <p>The challenge was to create a seamless e-commerce experience that reduces decision fatigue and perceived risk for mostly beginner bakers. The solution needed to simplify the journey from recipe discovery to purchase — without overwhelming users with choices or unnecessary complexity.</p>
-        <div class="cs-callout">
-          <p>How might we create a low-effort, low-commitment shopping experience that helps users quickly find and confidently purchase recipe kits without feeling overwhelmed?</p>
+        <div class="summary" style="margin-top: 2rem;">
+          <div class="summary-cell">
+            <p class="summary-label">Problem</p>
+            <p class="summary-text">Beginners avoid baking because full ingredients feel wasteful and impractical for one-off recipes.</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Solution</p>
+            <p class="summary-text">A mobile-first e-commerce app for one-time, pre-portioned baking kits — no subscription required.</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">My role</p>
+            <p class="summary-text">End-to-end ownership: research, IA, wireframes, visual design, prototype, and usability testing.</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Outcome</p>
+            <p class="summary-text">High-fidelity prototype validated through 3 usability tests, with 4 design iterations addressing key friction points.</p>
+          </div>
         </div>
       </section>
 
-      <!-- USER RESEARCH -->
-      <section class="cs-section">
-        <span class="cs-section-label">User Research</span>
-        <h2>Listening to Real Bakers</h2>
-        <p>Five individuals between age 20–35 were interviewed to better understand the motivations, barriers, and behaviors of people interested in baking.</p>
+      <!-- Problem -->
+      <section class="section" id="problem">
+        <div class="section-meta">
+          <span class="section-num">02</span>
+          <span class="section-pill">Context &amp; problem</span>
+        </div>
+        <h2>Baking shouldn't require a subscription.</h2>
+        <p>Most baking happens occasionally — for a date night, a family gathering, or a casual afternoon. Yet to participate, beginners need to buy full-sized ingredients for recipes they may only make once. The result: pantries fill up with bottles of vanilla extract and bags of flour that go unused, and people opt out of baking altogether.</p>
+        <p>Existing meal kit services solve a similar problem for cooking, but they assume routine use through subscriptions — a model that doesn't fit the occasional, social nature of baking.</p>
 
-        <div class="cs-stats">
-          <div>
-            <div class="cs-stat-number">5</div>
-            <div class="cs-stat-label">User interviews conducted</div>
+        <div class="hmw">
+          <p class="hmw-label">How might we…</p>
+          <p class="hmw-text">… create a low-effort, low-commitment shopping experience that helps users quickly find and confidently purchase recipe kits without feeling overwhelmed?</p>
+        </div>
+      </section>
+
+      <!-- Research -->
+      <section class="section" id="research">
+        <div class="section-meta">
+          <span class="section-num">03</span>
+          <span class="section-pill">User research</span>
+        </div>
+        <h2>Listening to real bakers.</h2>
+        <p>I conducted semi-structured interviews with five participants aged 20–35 to understand baking motivations, barriers, and behaviors.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-num">5</div>
+            <div class="stat-label">Interview participants</div>
           </div>
-          <div>
-            <div class="cs-stat-number">20–35</div>
-            <div class="cs-stat-label">Age range of participants</div>
+          <div class="stat">
+            <div class="stat-num">20–35</div>
+            <div class="stat-label">Age range</div>
           </div>
-          <div>
-            <div class="cs-stat-number">100%</div>
-            <div class="cs-stat-label">Said they'd bake more with pre-measured kits</div>
+          <div class="stat">
+            <div class="stat-num">100<span style="font-size:0.7em">%</span></div>
+            <div class="stat-label">Said pre-measured kits would make them bake more</div>
           </div>
         </div>
 
-        <h2 class="cs-section-subhead">Key Takeaways</h2>
-        <ul class="cs-takeaways">
-          <li>Most participants avoided baking because they didn't want to buy full-sized ingredients that they might not reuse.</li>
-          <li>Many felt intimidated by long ingredient lists, unclear steps, and required tools.</li>
-          <li>All participants said they would be more likely to bake if all ingredients were provided and pre-measured.</li>
+        <h3>Key insights</h3>
+        <ul class="takeaways">
+          <li>Most participants avoided baking because they didn't want to buy full-sized ingredients they might not reuse.</li>
+          <li>Many felt intimidated by long ingredient lists, unclear steps, and unfamiliar tools.</li>
+          <li>All participants said they'd be more likely to bake if all ingredients were provided and pre-measured.</li>
         </ul>
 
-        <h2 class="cs-section-subhead">In Their Own Words</h2>
-        <div class="cs-quotes">
-          <div class="cs-quote">
-            <p>I tried making cupcakes years ago and I had a lot of leftover ingredients like a whole bag of flour and the bottle of vanilla extract that I only used a few drops of.</p>
+        <h3>In their own words</h3>
+        <div class="quotes">
+          <div class="quote">
+            <span class="quote-mark">P02 · 28F</span>
+            "I tried making cupcakes years ago and had a lot of leftover ingredients — like a whole bag of flour and a bottle of vanilla extract that I only used a few drops of."
           </div>
-          <div class="cs-quote">
-            <p>I think the baking part is fun but anything before that is not fun — like going out shopping for all the ingredients, and then measuring everything.</p>
+          <div class="quote">
+            <span class="quote-mark">P04 · 31F</span>
+            "The baking part is fun, but anything before that is not — like going out shopping for all the ingredients, and then measuring everything."
           </div>
         </div>
       </section>
 
-      <!-- COMPETITIVE ANALYSIS -->
-      <section class="cs-section">
-        <span class="cs-section-label">Competitive Analysis</span>
-        <h2>Finding the Market Gap</h2>
-        <p>I analyzed three popular meal and cooking kit companies to identify market gaps, assessing the features offered by each through research.</p>
+      <!-- Competitive analysis -->
+      <section class="section" id="competitive">
+        <div class="section-meta">
+          <span class="section-num">04</span>
+          <span class="section-pill">Competitive analysis</span>
+        </div>
+        <h2>Finding the gap in the market.</h2>
+        <p>I analyzed three meal and baking kit companies to identify market gaps and opportunities for differentiation.</p>
 
-        <div class="cs-competitor-logos">
-          <div class="cs-competitor">
-            <img src="images/competitors/blue-apron.png" alt="Blue Apron" loading="lazy" />
-          </div>
-          <div class="cs-competitor">
-            <img src="images/competitors/hellofresh.png" alt="Hello Fresh" loading="lazy" />
-          </div>
-          <div class="cs-competitor">
-            <img src="images/competitors/baketivity.png" alt="Baketivity" loading="lazy" />
-          </div>
+        <div class="competitors">
+          <div class="competitor"><img src="images/competitors/blue-apron.png" alt="Blue Apron" /></div>
+          <div class="competitor"><img src="images/competitors/hellofresh.png" alt="HelloFresh" /></div>
+          <div class="competitor"><img src="images/competitors/baketivity.png" alt="Baketivity" /></div>
         </div>
 
-        <table class="cs-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th>Competitors</th>
-              <th>Bake Basket</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Recipe browsing</td>
-              <td class="check">✓</td>
-              <td class="check">✓</td>
-            </tr>
-            <tr>
-              <td>Pre-portioned ingredients</td>
-              <td class="check">✓</td>
-              <td class="check">✓</td>
-            </tr>
-            <tr>
-              <td>Subscription required</td>
-              <td class="check">✓</td>
-              <td class="cross">✗ Optional</td>
-            </tr>
-            <tr>
-              <td>One-time purchase</td>
-              <td class="cross">✗</td>
-              <td class="check">✓</td>
-            </tr>
-            <tr>
-              <td>Experience-focused (social/hobby)</td>
-              <td class="cross">✗</td>
-              <td class="check">✓</td>
-            </tr>
-            <tr>
-              <td>Gift purchase</td>
-              <td class="cross">✗</td>
-              <td class="check">✓</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Feature</th><th>Competitors</th><th>Bake Basket</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Recipe browsing</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+              <tr><td>Pre-portioned ingredients</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+              <tr><td>Subscription required</td><td class="yes">Yes</td><td class="opt">Optional</td></tr>
+              <tr><td>One-time purchase</td><td class="no">No</td><td class="yes">Yes</td></tr>
+              <tr><td>Hobby / social focus</td><td class="no">No</td><td class="yes">Yes</td></tr>
+              <tr><td>Gift purchase</td><td class="no">No</td><td class="yes">Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-        <div class="cs-two-col">
-          <div>
-            <span class="cs-section-label">Strengths</span>
-            <ul class="cs-takeaways">
+        <div class="twocol">
+          <div class="twocol-block">
+            <h4>Strengths</h4>
+            <ul class="takeaways">
               <li>Low commitment: no subscription, easy one-time use.</li>
               <li>Designed for hobby and social moments — dates, family, casual fun.</li>
             </ul>
           </div>
-          <div>
-            <span class="cs-section-label">Challenges</span>
-            <ul class="cs-takeaways">
-              <li>Lower retention potential without subscription model.</li>
-              <li>Less habit-based usage compared to routine meal services.</li>
+          <div class="twocol-block">
+            <h4>Risks</h4>
+            <ul class="takeaways">
+              <li>Lower retention without a subscription model.</li>
+              <li>Less habit-based usage than routine meal services.</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <!-- PERSONA -->
-      <section class="cs-section">
-        <span class="cs-section-label">User Persona</span>
-        <h2>Meet Heather</h2>
-        <p>Based on my interviews, I synthesized a primary persona to guide design decisions.</p>
+      <!-- Persona -->
+      <section class="section" id="persona">
+        <div class="section-meta">
+          <span class="section-num">05</span>
+          <span class="section-pill">User persona</span>
+        </div>
+        <h2>Meet Heather.</h2>
+        <p>Synthesized from interviews, Heather represents the primary user — someone who enjoys the idea of baking but finds the logistics too high-effort for the occasional payoff.</p>
 
-        <div class="cs-persona">
-          <div class="cs-persona-left">
-            <img
-              src="https://framerusercontent.com/images/z9jIKOiaUYOipcSl6CSTeHQhOow.png"
-              alt="Persona illustration of Heather"
-              loading="lazy"
-            />
-            <div class="cs-persona-col">
-              <h4>Motivations</h4>
-              <ul>
-                <li>Seeks meaningful, shareable experiences</li>
-                <li>Wants to feel creative and productive outside of work</li>
-                <li>Enjoys activities that feel cozy, aesthetic, and fun</li>
-              </ul>
-            </div>
+        <div class="persona">
+          <div>
+            <img class="persona-img" src="https://framerusercontent.com/images/z9jIKOiaUYOipcSl6CSTeHQhOow.png" alt="Persona portrait" />
           </div>
-          <div class="cs-persona-info">
-            <h3>Heather</h3>
-            <p class="cs-persona-role">28 · Environmental Engineer · Toronto, Canada</p>
-            <p class="cs-persona-bio">Heather works a busy 9–5 job and enjoys finding small ways to unwind after work. She used to bake occasionally with her family, but since moving into a small apartment, she rarely does. Limited space, lack of tools, and leftover ingredients make baking feel impractical — especially when recipes are made for larger portions. She still enjoys the idea of baking for date nights or small gatherings, but the effort and commitment often stop her from following through.</p>
-            <div class="cs-persona-cols">
-              <div class="cs-persona-col">
-                <h4>Goals</h4>
-                <ul>
-                  <li>Quickly find a recipe that fits her taste and needs</li>
-                  <li>Compare options easily (difficulty, time, servings)</li>
-                  <li>Complete purchase with minimal effort</li>
+          <div>
+            <h3 class="persona-name" style="margin: 0 0 0.25rem;">Heather, 28</h3>
+            <p class="persona-role">Environmental Engineer · Toronto, ON</p>
+            <p class="persona-bio">Works a busy 9–5, unwinds with small creative hobbies. Used to bake with family, but since moving into a small apartment rarely does — limited space, missing tools, and leftover ingredients make it feel impractical. Still loves the idea for date nights or small gatherings, but the effort and commitment usually stop her.</p>
+            <div class="persona-grid">
+              <div>
+                <p class="persona-list-label">Goals</p>
+                <ul class="persona-list">
+                  <li>Quickly find a recipe that fits her taste</li>
+                  <li>Easily compare time, difficulty, and servings</li>
+                  <li>Complete checkout with minimal effort</li>
                 </ul>
               </div>
-              <div class="cs-persona-col">
-                <h4>Pain Points</h4>
-                <ul>
+              <div>
+                <p class="persona-list-label">Pain points</p>
+                <ul class="persona-list">
                   <li>Too many decisions upfront</li>
                   <li>High cognitive load when browsing</li>
-                  <li>Perceived effort vs. reward feels too high</li>
+                  <li>Effort vs. reward feels imbalanced</li>
                 </ul>
               </div>
             </div>
@@ -264,48 +1063,37 @@
         </div>
       </section>
 
-      <!-- SOLUTION -->
-      <section class="cs-section">
-        <span class="cs-section-label">Solution</span>
-        <h2>A Simple, Playful Shopping Experience</h2>
-        <p>Design a simple, playful shopping experience where users can browse and discover recipes they're excited about, then purchase everything they need with minimal effort.</p>
-        <p>The app streamlines the journey: discover → review details → add to cart → checkout. Every step removes friction rather than adding to it.</p>
-
+      <!-- Solution -->
+      <section class="section" id="solution">
+        <div class="section-meta">
+          <span class="section-num">06</span>
+          <span class="section-pill">Solution</span>
+        </div>
+        <h2>A simple, playful shopping experience.</h2>
+        <p>Design a streamlined journey — <strong>discover → review → cart → checkout</strong> — where every step removes friction rather than adding to it. Browsing should feel exciting, not overwhelming. Decisions should be easy to make, easy to revise.</p>
       </section>
 
-      <!-- SITE MAP -->
-      <section class="cs-section">
-        <span class="cs-section-label">Define</span>
-        <h2>Site Map</h2>
-        <p>I created a sitemap to visualize the app's structure, serving as a blueprint showcasing minimal navigation and a streamlined checkout flow.</p>
-
-        <img
-          class="cs-img-full"
-          src="images/sitemap.png"
-          alt="Bake Basket sitemap"
-          loading="lazy"
-        />
+      <!-- IA -->
+      <section class="section" id="ia">
+        <div class="section-meta">
+          <span class="section-num">07</span>
+          <span class="section-pill">Information architecture</span>
+        </div>
+        <h2>Site map &amp; user flow.</h2>
+        <p>The sitemap visualizes the app's structure — minimal navigation, streamlined checkout. The user flow maps how users move through the app, supporting both exploratory browsing and impulse-based purchasing.</p>
+        <img class="img-full" src="images/sitemap.png" alt="Bake Basket site map" />
+        <img class="img-full" src="images/userflow.png" alt="Bake Basket user flow" />
       </section>
 
-      <!-- USER FLOW -->
-      <section class="cs-section">
-        <span class="cs-section-label">Interaction Design</span>
-        <h2>User Flow</h2>
-        <p>I designed a user flow to map how users move through the app — from discovering recipes, viewing details, to quickly adding kits to cart for purchase. The flow prioritizes simple navigation and supports both exploratory and impulse-based behaviors.</p>
-
-        <img
-          class="cs-img-full"
-          src="images/userflow.png"
-          alt="Bake Basket user flow"
-          loading="lazy"
-        />
-      </section>
-
-      <!-- WIREFRAMES -->
-      <section class="cs-section">
-        <span class="cs-section-label">Design Process</span>
-        <h2>Wireframes</h2>
-        <div class="cs-wireframe-grid">
+      <!-- Wireframes -->
+      <section class="section" id="wireframes">
+        <div class="section-meta">
+          <span class="section-num">08</span>
+          <span class="section-pill">Wireframes</span>
+        </div>
+        <h2>Low-fidelity wireframes.</h2>
+        <p>I sketched out the core screens to validate layout decisions before committing to visual design.</p>
+        <div class="img-grid">
           <img src="images/Home%20Page.png" alt="Home Page" loading="lazy" />
           <img src="images/Saved%20Recipes%20(Empty).png" alt="Saved Recipes (Empty)" loading="lazy" />
           <img src="images/Cart%20(Empty).png" alt="Cart (Empty)" loading="lazy" />
@@ -318,148 +1106,247 @@
         </div>
       </section>
 
-      <!-- VISUAL DESIGN & UI KIT -->
-      <section class="cs-section uikit-section">
-        <span class="cs-section-label">Design System</span>
-        <h2>Visual Design &amp; UI Kit</h2>
-        <p>The design direction is warm, playful, and approachable. I built the palette around soft pastel oranges and gentle neutrals to evoke that cosy, homemade feeling. To keep the interface feeling friendly, I leaned into rounded typefaces, pill shaped buttons, and soft card edges.</p>
-        <img src="images/ui%20kit.png" alt="Visual Design & UI Kit" class="cs-img-full" />
+      <!-- Visual design -->
+      <section class="section" id="ui">
+        <div class="section-meta">
+          <span class="section-num">09</span>
+          <span class="section-pill">Visual design</span>
+        </div>
+        <h2>Warm, playful, approachable.</h2>
+        <p>The visual direction leans into a homemade, cosy feeling — soft pastel oranges and gentle neutrals, rounded type, pill buttons, and softened card edges create an interface that feels friendly rather than clinical.</p>
+        <img class="img-full" src="images/ui%20kit.png" alt="UI kit and visual system" loading="lazy" />
       </section>
 
-      <!-- HIGH-FIDELITY PROTOTYPE -->
-      <section class="cs-section">
-        <span class="cs-section-label">Prototype</span>
-        <h2>High-Fidelity Prototype</h2>
-        <div class="cs-wireframe-grid">
-          <img src="images/prototype/Home.png" alt="Home screen" />
-          <img src="images/prototype/Saved%20(Empty).png" alt="Saved Recipes (Empty)" loading="lazy" />
+      <!-- Prototype -->
+      <section class="section" id="prototype">
+        <div class="section-meta">
+          <span class="section-num">10</span>
+          <span class="section-pill">Prototype</span>
+        </div>
+        <h2>High-fidelity prototype.</h2>
+        <div class="img-grid">
+          <img src="images/prototype/Home.png" alt="Home" loading="lazy" />
+          <img src="images/prototype/Saved%20(Empty).png" alt="Saved (Empty)" loading="lazy" />
           <img src="images/prototype/Cart(Empty).png" alt="Cart (Empty)" loading="lazy" />
-          <img src="images/prototype/Recipe.png" alt="Recipe screen" loading="lazy" />
-          <img src="images/prototype/Saved(List).png" alt="Saved Recipes (List)" />
+          <img src="images/prototype/Recipe.png" alt="Recipe" loading="lazy" />
+          <img src="images/prototype/Saved(List).png" alt="Saved (List)" loading="lazy" />
           <img src="images/prototype/Cart(List).png" alt="Cart (List)" loading="lazy" />
-          <img src="images/prototype/Account.png" alt="Account screen" loading="lazy" />
-          <img src="images/prototype/Checkout.png" alt="Checkout screen" loading="lazy" />
-          <img src="images/prototype/Confirm.png" alt="Confirmation screen" loading="lazy" />
+          <img src="images/prototype/Account.png" alt="Account" loading="lazy" />
+          <img src="images/prototype/Checkout.png" alt="Checkout" loading="lazy" />
+          <img src="images/prototype/Confirm.png" alt="Confirm" loading="lazy" />
         </div>
       </section>
 
-      <!-- USABILITY TESTING -->
-      <section class="cs-section">
-        <span class="cs-section-label">Evaluate</span>
-        <h2>Usability Testing</h2>
-        <p>An unmoderated usability test was completed with 3 participants testing the high-fidelity prototype to uncover friction points, confirm a seamless purchase flow, and ensure the navigation is clear and intuitive.</p>
-        <img
-          class="cs-img-full"
-          src="images/usability%20test1.png"
-          alt="Usability testing results"
-          loading="lazy"
-        />
+      <!-- Usability testing -->
+      <section class="section" id="testing">
+        <div class="section-meta">
+          <span class="section-num">11</span>
+          <span class="section-pill">Usability testing</span>
+        </div>
+        <h2>Testing the prototype.</h2>
+        <p>I ran an unmoderated usability test with 3 participants on the high-fidelity prototype to surface friction points, validate the purchase flow, and verify navigation clarity.</p>
+        <img class="img-full" src="images/usability%20test1.png" alt="Usability testing results" loading="lazy" />
 
-        <h3 class="cs-subheading">Key Findings</h3>
-        <div class="cs-findings">
-
-          <div class="cs-finding">
-            <span class="cs-finding-num">01</span>
-            <h4 class="cs-finding-title">Filter Navigation Was Confusing</h4>
-            <p>Participants found it difficult to narrow down recipes using the filter tags. The filtering system felt unclear, users weren't sure which tags were active or how to reset them, creating friction before they even reached a recipe.</p>
+        <h3>Key findings</h3>
+        <div class="findings">
+          <div class="finding">
+            <div class="finding-num">FINDING 01</div>
+            <h4>Filter navigation was confusing</h4>
+            <p>Participants struggled to narrow recipes — unclear which tags were active, no obvious way to reset.</p>
           </div>
-
-          <div class="cs-finding">
-            <span class="cs-finding-num">02</span>
-            <h4 class="cs-finding-title">Trapped Navigation on Secondary Pages</h4>
-            <p>From the Saved Recipes and Cart pages, users could only return to Home, there was no way to jump directly to another section. This forced unnecessary backtracking and broke the flow, especially when users wanted to continue browsing after saving a recipe.</p>
+          <div class="finding">
+            <div class="finding-num">FINDING 02</div>
+            <h4>Trapped on secondary pages</h4>
+            <p>From Saved or Cart, users could only return to Home — forcing unnecessary backtracking between sections.</p>
           </div>
-
-          <div class="cs-finding">
-            <span class="cs-finding-num">03</span>
-            <h4 class="cs-finding-title">Browsing Felt Overwhelming</h4>
-            <p>While the purchase and checkout flow was smooth overall, the browsing experience presented too many filter options at once. Users felt unsure where to start, leading to decision fatigue during discovery, even before they found something to buy.</p>
+          <div class="finding">
+            <div class="finding-num">FINDING 03</div>
+            <h4>Browsing felt overwhelming</h4>
+            <p>Too many filter tags exposed at once during discovery led to decision fatigue before users even reached a recipe.</p>
           </div>
-
         </div>
       </section>
 
-      <!-- ITERATIONS -->
-      <section class="cs-section">
-        <span class="cs-section-label">Iterate</span>
-        <h2>Iterations</h2>
-        <p>Using the findings from user testing, I went back and revised the design to better address the pain points that came up. Each iteration focused on making the experience clearer, more intuitive, and better suited to how real users were actually navigating the app.</p>
-        <div class="cs-iterations-grid">
+      <!-- Iterations -->
+      <section class="section" id="iterations">
+        <div class="section-meta">
+          <span class="section-num">12</span>
+          <span class="section-pill">Iterations</span>
+        </div>
+        <h2>Iterating from feedback.</h2>
+        <p>Each iteration addressed a specific friction point uncovered during testing — making the experience clearer, more intuitive, and better matched to how users actually navigate.</p>
 
-          <!-- Before/after + after screen — grouped, caption under first image only -->
-          <div class="cs-iteration-group" style="grid-column: 1 / -1;">
-            <div style="display: flex; gap: 1.25rem; padding: 1.25rem; background: var(--color-bg);">
-              <div style="flex: 2; min-width: 0; display: flex; flex-direction: column; gap: 0;">
-                <img src="images/iteration/Iteration%201.png" alt="Iteration 1 — before and after comparison" class="cs-iteration-img" loading="lazy" style="border-radius: 0.5rem 0.5rem 0 0; border-bottom: none; width: 100%;" />
-                <div class="cs-iteration-caption" style="border-radius: 0 0 0.5rem 0.5rem; border-top: 1px solid var(--color-rule);">
-                  <h4 class="cs-finding-title" style="margin-bottom: 0.5rem;">New Filter Navigation</h4>
-                  <p>The original filter tags cluttered the home page on first glance and made the system harder to understand so I condensed them into a single Filter button and categorised them to make them easier to go through. Collapsing them into one button reduces visual noise immediately, so users aren't overwhelmed before they've even started browsing.</p>
-                </div>
-              </div>
-              <div style="flex: 1; min-width: 0;">
-                <img src="images/iteration/Iteration%201a.png" alt="Iteration 1a — full after screen" class="cs-iteration-img" loading="lazy" style="width: 100%; border-radius: 0.5rem;" />
-              </div>
+        <div class="iter">
+          <div class="iter-head">
+            <span class="iter-num">ITERATION 01</span>
+            <span class="iter-title">New filter navigation</span>
+          </div>
+          <div class="iter-body">
+            <div class="iter-img-wrap">
+              <span class="iter-img-label">Before / After</span>
+              <img src="images/iteration/Iteration%201.png" alt="Filter — before and after" loading="lazy" />
+            </div>
+            <div class="iter-img-wrap">
+              <span class="iter-img-label iter-img-label--after">Filter modal</span>
+              <img src="images/iteration/Iteration%201a.png" alt="Filter modal" loading="lazy" />
             </div>
           </div>
+          <p class="iter-caption">Tags cluttered the home page on first glance and made the filter system harder to understand. I condensed them into a single Filter button with grouped categories — reducing visual noise so users aren't overwhelmed before they've even started browsing.</p>
+        </div>
 
-          <div class="cs-iteration-group">
-            <div class="cs-iteration-group__images">
-              <img src="images/iteration/Iteration%201b.png" alt="Iteration 1b" class="cs-iteration-img" loading="lazy" />
-              <img src="images/iteration/Iteration%201c.png" alt="Iteration 1c" class="cs-iteration-img" loading="lazy" />
+        <div class="iter">
+          <div class="iter-head">
+            <span class="iter-num">ITERATION 02</span>
+            <span class="iter-title">"Surprise Me" feature</span>
+          </div>
+          <div class="iter-body">
+            <div class="iter-img-wrap">
+              <span class="iter-img-label">Empty state</span>
+              <img src="images/iteration/Iteration%201b.png" alt="Surprise Me — empty state" loading="lazy" />
             </div>
-            <div class="cs-iteration-caption">
-              <h4 class="cs-finding-title" style="margin-bottom: 0.5rem;">"Surprise Me" Feature</h4>
-              <p>Since the app focuses on impulse buying, I wanted to introduce more playful elements to the experience. I added a "Surprise Me" feature that presents only 3 randomly selected recipes instead of showing all options at once. Too many choices leads to decision paralysis, and by narrowing the view users can make a decision faster and enjoy the spontaneity of discovery.</p>
+            <div class="iter-img-wrap">
+              <span class="iter-img-label iter-img-label--after">Active state</span>
+              <img src="images/iteration/Iteration%201c.png" alt="Surprise Me — active state" loading="lazy" />
             </div>
           </div>
-          <div class="cs-iteration-stack">
-            <figure class="cs-iteration-figure">
-              <img src="images/iteration/Iteration%202.png" alt="Iteration 2" class="cs-iteration-img" loading="lazy" />
-              <figcaption class="cs-iteration-caption">
-                <h4 class="cs-finding-title" style="margin-bottom: 0.5rem;">Recipe Cards Redesign</h4>
-                <p>I redesigned the recipe cards to be smaller so more of the next card is visible, encouraging users to keep scrolling. I also added tags like "New" and "Popular" to help certain recipes stand out.</p>
-              </figcaption>
-            </figure>
-            <figure class="cs-iteration-figure">
-              <img src="images/iteration/Iteration%203.png" alt="Iteration 3" class="cs-iteration-img" loading="lazy" />
-              <figcaption class="cs-iteration-caption">
-                <h4 class="cs-finding-title" style="margin-bottom: 0.5rem;">Added Navigation Footer</h4>
-                <p>I added a navigation footer to secondary pages so users can jump directly to any section without having to navigate back to the home screen first. Removing unnecessary backtracking and keeps the browsing flow feeling fast and effortless.</p>
-              </figcaption>
-            </figure>
+          <p class="iter-caption">Since the app supports impulse buying, I added a Surprise Me feature that presents 3 randomly selected recipes instead of the full list. Narrowing the view helps users decide faster and adds a playful element to the discovery experience.</p>
+        </div>
+
+        <div class="iter">
+          <div class="iter-head">
+            <span class="iter-num">ITERATION 03</span>
+            <span class="iter-title">Recipe card redesign</span>
           </div>
+          <div class="iter-body iter-body--single">
+            <div class="iter-img-wrap">
+              <span class="iter-img-label iter-img-label--after">After</span>
+              <img src="images/iteration/Iteration%202.png" alt="Recipe card redesign" loading="lazy" />
+            </div>
+          </div>
+          <p class="iter-caption">Resized cards so the next recipe peeks into view, encouraging continued scrolling. Added "New" and "Popular" tags to surface noteworthy recipes without overwhelming the layout.</p>
+        </div>
+
+        <div class="iter">
+          <div class="iter-head">
+            <span class="iter-num">ITERATION 04</span>
+            <span class="iter-title">Persistent navigation footer</span>
+          </div>
+          <div class="iter-body iter-body--single">
+            <div class="iter-img-wrap">
+              <span class="iter-img-label iter-img-label--after">After</span>
+              <img src="images/iteration/Iteration%203.png" alt="Persistent navigation footer" loading="lazy" />
+            </div>
+          </div>
+          <p class="iter-caption">Added a persistent navigation footer to secondary pages so users can jump between Home, Saved, Cart, and Account directly — eliminating backtracking and keeping the browsing flow effortless.</p>
         </div>
       </section>
 
-      <!-- FINAL FEW SCREENS -->
-      <section class="cs-section">
-        <span class="cs-section-label">Final Design</span>
-        <h2>Final Few Screens</h2>
-        <p>Try out the prototype below for the full browse to purchase flow!</p>
-        <div class="cs-final-grid">
-          <img src="images/final%20design/Home.png"                  alt="Home"                  class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Filter.png"                alt="Filter"                class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Recipe.png"                alt="Recipe"                class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Surprise%20Me.png"         alt="Surprise Me"           class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Cart%20(List).png"         alt="Cart"                  class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Cart%20(Empty).png"        alt="Cart Empty"            class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Saved%20Recipe%20(Empty).png" alt="Saved Recipes"      class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Checkout.png"              alt="Checkout"              class="cs-iteration-img" loading="lazy" />
-          <img src="images/final%20design/Order%20Complete.png"      alt="Order Complete"        class="cs-iteration-img" loading="lazy" />
+      <!-- Final design -->
+      <section class="section" id="final">
+        <div class="section-meta">
+          <span class="section-num">13</span>
+          <span class="section-pill">Final design</span>
         </div>
-        <div class="cs-proto-cta">
-          <a href="https://www.figma.com/proto/L8KWsWZbsNG2pA5q7rweKc/Bake-Casket-Proto?node-id=1-423&p=f&t=T84t41O7Q0S0YIgl-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A423" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Try out the Prototype →</a>
+        <h2>Final screens.</h2>
+        <p>The shipped flow — from browse to checkout to confirmation.</p>
+        <div class="img-grid">
+          <img src="images/final%20design/Home.png" alt="Home" loading="lazy" />
+          <img src="images/final%20design/Filter.png" alt="Filter" loading="lazy" />
+          <img src="images/final%20design/Recipe.png" alt="Recipe" loading="lazy" />
+          <img src="images/final%20design/Surprise%20Me.png" alt="Surprise Me" loading="lazy" />
+          <img src="images/final%20design/Cart%20(List).png" alt="Cart" loading="lazy" />
+          <img src="images/final%20design/Cart%20(Empty).png" alt="Cart Empty" loading="lazy" />
+          <img src="images/final%20design/Saved%20Recipe%20(Empty).png" alt="Saved" loading="lazy" />
+          <img src="images/final%20design/Checkout.png" alt="Checkout" loading="lazy" />
+          <img src="images/final%20design/Order%20Complete.png" alt="Order Complete" loading="lazy" />
+        </div>
+
+        <div class="cta-row">
+          <a href="https://www.figma.com/proto/L8KWsWZbsNG2pA5q7rweKc/Bake-Casket-Proto?node-id=1-423&p=f&t=T84t41O7Q0S0YIgl-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A423" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <span>View prototype</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="index.html#work" class="btn btn-secondary">
+            <span>Back to work</span>
+          </a>
         </div>
       </section>
 
-    </div><!-- /cs-body -->
+      <!-- Reflection -->
+      <section class="section" id="reflection">
+        <div class="section-meta">
+          <span class="section-num">14</span>
+          <span class="section-pill">Reflection</span>
+        </div>
+        <h2>What I learned.</h2>
+        <p><strong>Constrain to clarify.</strong> The biggest unlock came from removing options — collapsing the filter tags and offering "Surprise Me" both reduced choices on the surface, but made the experience feel more inviting, not less capable.</p>
+        <p><strong>Test what matters most.</strong> The checkout flow worked smoothly out of the gate, but discovery — the part I'd considered "secondary" — turned out to be where users got stuck. Testing surfaced that early enough to course-correct.</p>
+        <p><strong>If I had more time…</strong> I'd validate the iterations with a follow-up round of usability testing, and explore a lightweight onboarding moment to set expectations before users land on Home for the first time.</p>
+      </section>
 
-    <!-- FOOTER -->
-    <footer class="site-footer cs-footer">
-      <p>© 2026 Katie Lei &nbsp;·&nbsp; <a href="index.html#work" class="cs-footer-link">← Back to all work</a></p>
-    </footer>
+    </article>
+  </div>
 
-  </main>
+  <!-- Bottom navigation -->
+  <nav class="bottom-nav" aria-label="Page navigation">
+    <a href="index.html#work" class="bottom-nav-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All work
+    </a>
+    <a href="game-revamp-case-study.html" class="bottom-nav-link">
+      Next case study: Electronic Arts
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 Katie Lei · Toronto, ON</p>
+    <div class="footer-links">
+      <a href="mailto:katie.sinlei@gmail.com">Email</a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#" target="_blank" rel="noopener">Dribbble</a>
+    </div>
+  </footer>
+
+  <script>
+    // Reading progress
+    (function() {
+      var bar = document.getElementById('progress');
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement;
+        var scrolled = h.scrollTop || document.body.scrollTop;
+        var max = h.scrollHeight - h.clientHeight;
+        bar.style.width = max > 0 ? (scrolled / max * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+
+    // TOC active state via IntersectionObserver
+    (function() {
+      var sections = document.querySelectorAll('.section[id]');
+      var links = document.querySelectorAll('#tocList a');
+      if (!('IntersectionObserver' in window)) return;
+      var byId = {};
+      links.forEach(function(a) {
+        var id = a.getAttribute('href').replace('#','');
+        byId[id] = a;
+      });
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            links.forEach(function(a) { a.classList.remove('is-active'); });
+            var a = byId[e.target.id];
+            if (a) a.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+      sections.forEach(function(s) { io.observe(s); });
+    })();
+  </script>
 
 </body>
 </html>

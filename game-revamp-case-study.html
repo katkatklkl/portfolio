@@ -4,213 +4,977 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game UI Revamp — Katie Lei</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================
+       EA Game UI Revamp — Case Study v2
+       Matches Bake Basket v2 system: sans-serif, structured grid,
+       sticky TOC, neutral palette with single accent.
+    ========================================================= */
+
+    :root {
+      --bg:           #FAFAF9;
+      --bg-2:         #F4F3F0;
+      --bg-3:         #EAE8E3;
+      --rule:         #E5E3DD;
+      --rule-strong:  #D4D1C8;
+      --ink:          #1A1A1A;
+      --ink-2:        #4A4A48;
+      --ink-3:        #807E78;
+      --ink-4:        #B5B2A8;
+      --accent:       #B8893A;       /* warm gold — nods to project's gold redesign */
+      --accent-soft:  #F5EBD6;
+      --success:      #2E7D4F;
+      --error:        #B94040;
+
+      --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+      --radius-sm:    6px;
+      --radius:       10px;
+      --radius-lg:    16px;
+
+      --shadow-sm:    0 1px 2px rgba(0,0,0,0.04);
+      --shadow:       0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.05);
+      --shadow-lg:    0 8px 24px -8px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.04);
+
+      --sidebar-w:    280px;
+      --content-max:  720px;
+      --wide-max:     1100px;
+
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'cv11', 'ss01', 'kern';
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* Top bar */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 2rem;
+      background: rgba(250,250,249,0.85);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+    .topbar-brand { font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .topbar-crumb {
+      display: none;
+      font-size: 0.85rem; color: var(--ink-3);
+      align-items: center; gap: 0.5rem;
+    }
+    @media (min-width: 720px) { .topbar-crumb { display: inline-flex; } }
+    .topbar-crumb-sep { color: var(--ink-4); }
+    .topbar-crumb-current { color: var(--ink); font-weight: 500; }
+    .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-link {
+      font-size: 0.85rem; color: var(--ink-2);
+      padding: 0.4rem 0.75rem; border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms;
+    }
+    .topbar-link:hover { background: var(--bg-2); color: var(--ink); }
+    .topbar-cta {
+      font-size: 0.85rem; font-weight: 500;
+      padding: 0.5rem 0.85rem;
+      background: var(--ink); color: var(--bg);
+      border-radius: var(--radius-sm);
+      transition: background 150ms;
+    }
+    .topbar-cta:hover { background: var(--ink-2); }
+
+    /* Reading progress */
+    .progress {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: transparent; z-index: 200;
+    }
+    .progress-bar {
+      height: 100%; width: 0%; background: var(--accent);
+      transition: width 80ms linear;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: var(--wide-max);
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--ink-2);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+    }
+    .hero-title {
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      font-weight: 600; line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+      max-width: 18ch; text-wrap: balance;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      line-height: 1.5;
+      color: var(--ink-2);
+      max-width: 56ch;
+      margin-bottom: 3rem;
+      text-wrap: pretty;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 1.5rem 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    @media (max-width: 720px) {
+      .hero-meta { grid-template-columns: repeat(2, 1fr); }
+    }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 0.35rem; }
+    .hero-meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .hero-meta-value {
+      font-size: 0.92rem; font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* Cover */
+    .cover-wrap {
+      max-width: 360px;
+      margin: 0 auto 4rem;
+      padding: 0 2rem;
+    }
+    .cover {
+      width: 100%; height: auto; display: block;
+      border-radius: var(--radius-lg);
+      background: var(--bg-2);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Layout */
+    .layout {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; gap: 0; }
+    }
+
+    /* TOC sidebar */
+    .toc {
+      position: sticky; top: 88px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+    @media (max-width: 980px) { .toc { display: none; } }
+    .toc-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; color: var(--ink-3);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.1rem;
+      border-left: 1px solid var(--rule);
+    }
+    .toc-list a {
+      display: block;
+      padding: 0.45rem 0 0.45rem 1rem;
+      margin-left: -1px;
+      border-left: 1px solid transparent;
+      font-size: 0.85rem;
+      color: var(--ink-3);
+      transition: color 150ms, border-color 150ms;
+    }
+    .toc-list a:hover { color: var(--ink); }
+    .toc-list a.is-active {
+      color: var(--ink);
+      border-left-color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Content */
+    .content { max-width: var(--content-max); min-width: 0; }
+
+    /* Sections */
+    .section {
+      padding: 3rem 0;
+      border-top: 1px solid var(--rule);
+      scroll-margin-top: 88px;
+    }
+    .section:first-child { border-top: none; padding-top: 0; }
+    .section-meta {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+    }
+    .section-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      color: var(--ink-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .section h2 {
+      font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+      font-weight: 600; line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+    .section h3 {
+      font-size: 1.05rem; font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 2.5rem 0 0.85rem;
+      color: var(--ink);
+    }
+    .section p {
+      font-size: 1rem; line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 64ch;
+    }
+    .section p + p { margin-top: 0.85rem; }
+    .section p strong { color: var(--ink); font-weight: 600; }
+
+    /* Summary grid */
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+    @media (max-width: 720px) { .summary { grid-template-columns: 1fr; } }
+    .summary-cell {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .summary-cell:nth-child(2n) { border-right: none; }
+    .summary-cell:nth-last-child(-n+2) { border-bottom: none; }
+    @media (max-width: 720px) {
+      .summary-cell { border-right: none !important; border-bottom: 1px solid var(--rule) !important; }
+      .summary-cell:last-child { border-bottom: none !important; }
+    }
+    .summary-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    .summary-text {
+      font-size: 0.92rem;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 720px) { .stats { grid-template-columns: 1fr; } }
+    .stat {
+      padding: 1.25rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    .stat-num {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label { font-size: 0.82rem; color: var(--ink-3); line-height: 1.4; }
+
+    /* Findings cards */
+    .findings {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .findings { grid-template-columns: 1fr; } }
+    .finding {
+      padding: 1.25rem;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    .finding-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+    .finding h4 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .finding p {
+      font-size: 0.85rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* Screen audit block */
+    .audit {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.5rem 0 2rem;
+      background: var(--bg);
+    }
+    .audit-head {
+      display: flex; align-items: baseline; gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg-2);
+    }
+    .audit-num {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+    }
+    .audit-title {
+      font-size: 1rem; font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .audit-img-wrap {
+      padding: 1.5rem;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .audit-img {
+      width: 100%; height: auto;
+      border-radius: var(--radius-sm);
+      background: var(--bg-3);
+      box-shadow: var(--shadow-sm);
+    }
+    .audit-findings {
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 720px) { .audit-findings { grid-template-columns: 1fr; } }
+    .audit-finding-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.04em;
+      display: block;
+    }
+    .audit-findings h4 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .audit-findings p {
+      font-size: 0.85rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* Before / After comparison */
+    .ba {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .ba { grid-template-columns: 1fr; } }
+    .ba-cell {
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 1rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .ba-label {
+      display: inline-flex; align-self: flex-start;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--ink-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+    }
+    .ba-label--after {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .ba-cell img {
+      width: 100%;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    /* Full-width image */
+    .img-full {
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Image grid (2D art) */
+    .img-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    .img-grid img {
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Takeaway list */
+    .takeaways {
+      list-style: none;
+      display: flex; flex-direction: column;
+      counter-reset: tk;
+      margin: 1rem 0;
+    }
+    .takeaways li {
+      counter-increment: tk;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 0.75rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.95rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+    .takeaways li:last-child { border-bottom: none; }
+    .takeaways li::before {
+      content: counter(tk, decimal-leading-zero);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      padding-top: 1px;
+    }
+
+    /* CTA */
+    .cta-row {
+      display: flex; gap: 0.75rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.1rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem; font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms, border-color 150ms;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--ink); color: var(--bg); }
+    .btn-primary:hover { background: var(--ink-2); }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+    .btn-secondary:hover { background: var(--bg-2); }
+
+    /* Bottom navigation */
+    .bottom-nav {
+      max-width: var(--wide-max);
+      margin: 4rem auto 0;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .bottom-nav-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9rem; color: var(--ink-2);
+      padding: 0.5rem 0;
+      transition: color 150ms;
+    }
+    .bottom-nav-link:hover { color: var(--ink); }
+    .bottom-nav-link svg { transition: transform 200ms var(--ease); }
+    .bottom-nav-link:hover svg { transform: translateX(2px); }
+
+    /* Footer */
+    .footer {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem;
+      color: var(--ink-3);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-links { display: flex; gap: 1.25rem; }
+    .footer-links a:hover { color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .topbar { padding: 0.75rem 1.25rem; }
+      .hero { padding: 3rem 1.25rem 2rem; }
+      .cover-wrap, .layout, .bottom-nav, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
-  <aside class="site-sidebar">
-    <div class="sidebar-top">
-      <a href="index.html" class="site-title">Katie Lei</a>
-      <nav class="site-nav">
-        <a href="index.html#intro">Intro</a>
-        <a href="index.html#work">Work</a>
-        <a href="index.html#about">About</a>
-        <a href="index.html#contact">Contact</a>
-      </nav>
-      <div class="social-links">
-        <a href="#" aria-label="LinkedIn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a href="#" aria-label="Dribbble">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 6.628 5.374 12 12 12 6.628 0 12-5.372 12-12 0-6.627-5.372-12-12-12zm7.92 5.58a10.1 10.1 0 0 1 2.306 6.423c-.338-.065-3.716-.754-7.116-.327-.077-.189-.146-.378-.231-.566-.208-.496-.438-1-.674-1.49 3.776-1.537 5.494-3.748 5.715-4.04zM12 1.999a10.1 10.1 0 0 1 6.92 2.742c-.189.265-1.733 2.327-5.39 3.7-1.685-3.093-3.553-5.627-3.84-6.018A10.18 10.18 0 0 1 12 2zm-4.27.724c.277.377 2.107 2.916 3.816 5.955-4.816 1.28-9.07 1.258-9.51 1.25A10.12 10.12 0 0 1 7.73 2.724zM1.927 12.012v-.26c.426.009 5.387.074 10.52-1.458.296.574.57 1.158.824 1.742-.134.038-.269.077-.4.12-5.308 1.715-8.124 6.398-8.36 6.813A10.074 10.074 0 0 1 1.927 12zm10.073 10.074c-2.608 0-5.005-.935-6.864-2.476.196-.4 2.439-4.726 8.285-6.756.022-.008.044-.014.065-.022 1.48 3.84 2.09 7.056 2.25 7.995a10.07 10.07 0 0 1-3.736.26zm5.59-1.565c-.112-.663-.673-3.726-2.057-7.512 3.207-.514 6.016.33 6.369.44a10.127 10.127 0 0 1-4.312 7.072z"/></svg>
-        </a>
-        <a href="#" aria-label="Behance">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029H23zm-7.726-5.025c.305-2.17 1.945-2.732 3.188-2.732 1.265 0 2.76.76 2.76 2.732H15zm-9.826 3.025H1V1h7.6c4.493 0 4.888 3.505 3.392 5.007 2.13.948 2.74 4.018.908 5.993zM5 6.8h2.987c1.504 0 1.504-2.3 0-2.3H5v2.3zm0 5.4h3.38c1.685 0 1.685-2.6 0-2.6H5v2.6z"/></svg>
-        </a>
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-brand">Katie Lei</a>
+      <span class="topbar-crumb">
+        <a href="index.html#work" class="topbar-link" style="padding:0">Work</a>
+        <span class="topbar-crumb-sep">/</span>
+        <span class="topbar-crumb-current">Game UI Revamp</span>
+      </span>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html#contact" class="topbar-link">Contact</a>
+      <a href="bakebasket-case-study.html" class="topbar-cta">Next case study →</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Case study · Electronic Arts
+    </span>
+    <h1 class="hero-title">Refreshing a mobile game that had outgrown its original UI.</h1>
+    <p class="hero-subtitle">A UI/UX revamp of the home screen and character customization experience for an 8-year-old EA mobile title — modernizing the visual language to fix early drop-off and grow with the catalogue.</p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Role</span>
+        <span class="hero-meta-value">2D Artist · UI/UX</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Focus</span>
+        <span class="hero-meta-value">Home &amp; Customization</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Platform</span>
+        <span class="hero-meta-value">iOS &amp; Android</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Tools</span>
+        <span class="hero-meta-value">Adobe Suite, Miro, FigJam</span>
       </div>
     </div>
-    <div class="sidebar-bottom">
-      <p class="copyright">© 2026 Katie Lei</p>
-    </div>
-  </aside>
+  </section>
 
-  <!-- MAIN CONTENT -->
-  <main class="site-main">
+  <div class="cover-wrap">
+    <img class="cover" src="images/ea.png" alt="Electronic Arts game UI revamp — cover" />
+  </div>
 
-    <!-- HERO -->
-    <section class="cs-hero">
-      <div class="cs-hero-inner">
+  <div class="layout">
 
-        <a href="index.html#work" class="cs-back">
-          ← Back to Work
-        </a>
+    <aside class="toc" aria-label="Contents">
+      <p class="toc-label">Contents</p>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#summary" class="is-active">Summary</a></li>
+        <li><a href="#context">Context</a></li>
+        <li><a href="#problem">The problem</a></li>
+        <li><a href="#audit">Screen audits</a></li>
+        <li><a href="#approach">Design approach</a></li>
+        <li><a href="#home">Home screen redesign</a></li>
+        <li><a href="#customize">Customization redesign</a></li>
+        <li><a href="#art">2D art work</a></li>
+        <li><a href="#reflection">Reflection</a></li>
+      </ul>
+    </aside>
 
-        <span class="cs-tag">Electronic Arts &nbsp;·&nbsp; Mobile Game &nbsp;·&nbsp; UI/UX Redesign</span>
-        <h1 class="cs-title">Game UI Revamp</h1>
-        <p class="cs-subtitle">A UI/UX case study on redesigning the home screen and character customization experience for a game that had outgrown its original design.</p>
+    <article class="content">
 
-        <div class="cs-meta-row">
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Role</span>
-            <span class="cs-meta-value">2D Game Artist · User Testing · UX</span>
+      <!-- Summary -->
+      <section class="section" id="summary">
+        <div class="section-meta">
+          <span class="section-num">01</span>
+          <span class="section-pill">Summary</span>
+        </div>
+        <h2>At a glance</h2>
+        <p>An 8-year-old EA mobile title was losing players within the first few minutes. The home screen and character customization — the two screens every new player saw first — hadn't been meaningfully updated since launch, while the game's catalogue had grown dramatically. I joined the broader UI/UX revamp to help re-establish the brand's identity and improve early-session retention.</p>
+
+        <div class="summary">
+          <div class="summary-cell">
+            <p class="summary-label">Problem</p>
+            <p class="summary-text">Low retention — players dropping off within the first few minutes after the opening screens.</p>
           </div>
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Tools</span>
-            <span class="cs-meta-value">Adobe Suite · Miro · FigJam</span>
+          <div class="summary-cell">
+            <p class="summary-label">Solution</p>
+            <p class="summary-text">A unified, gold-led visual language and clearer navigation across the home and customization screens.</p>
           </div>
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Focus</span>
-            <span class="cs-meta-value">Starting Screen · Character Customization</span>
+          <div class="summary-cell">
+            <p class="summary-label">My role</p>
+            <p class="summary-text">Brainstorming, testing, and visual design for the home and customization screens; 2D asset production.</p>
           </div>
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Platform</span>
-            <span class="cs-meta-value">iOS &amp; Android</span>
-          </div>
-          <div class="cs-meta-item">
-            <span class="cs-meta-label">Type</span>
-            <span class="cs-meta-value">Game UX · Redesign</span>
+          <div class="summary-cell">
+            <p class="summary-label">Outcome</p>
+            <p class="summary-text">Shipped redesigns of both screens, with a cohesive icon set and elevated typography aligned to the brand.</p>
           </div>
         </div>
-
-        <img
-          class="cs-cover cs-cover--constrained"
-          src="images/ea.png"
-          alt="Electronic Arts game UI revamp"
-        />
-
-      </div>
-    </section>
-
-    <div class="cs-body">
-
-      <!-- OVERVIEW -->
-      <section class="cs-section" id="overview">
-        <span class="cs-section-label">Overview</span>
-        <h2>My Role at EA</h2>
-        <p>Outside of my 2D design work at EA, I had the opportunity to contribute to a broader UI/UX revamp the team was undertaking. The game was 8 years old and had evolved significantly since, with a much larger catalogue of items, clothing, and features that the original UI was never designed to support. My involvement spanned the brainstorming, testing, and design phases, with a focus on reworking the starting screen and character customization screen. I was also working on redesigning the tutorial scene, though that part of the project was cancelled before it shipped.</p>
       </section>
 
-      <!-- PROBLEM -->
-      <section class="cs-section">
-        <span class="cs-section-label">The Problem</span>
-        <h2>Players Were Leaving Early</h2>
-        <p>Data reports showed low retention rates, a significant number of players were quitting or deleting the game after only the first few screens or a few minutes of gameplay. The core goal of the revamp was to address this and bring those retention numbers up.</p>
-        <p>The early drop-off pointed to the first impression experience as a key area of concern. If players weren't sticking around past the opening screens (the starting screen and character customization experience which is the first things they interact with), we needed to do a much better job of drawing them in. To understand what wasn't working, team members tested the existing screens and documented our observations.</p>
+      <!-- Context -->
+      <section class="section" id="context">
+        <div class="section-meta">
+          <span class="section-num">02</span>
+          <span class="section-pill">Context</span>
+        </div>
+        <h2>My role at EA.</h2>
+        <p>Outside of my 2D design work at EA, I had the opportunity to contribute to a broader UI/UX revamp the team was undertaking. The game was 8 years old and had evolved significantly since — with a much larger catalogue of items, clothing, and features that the original UI was never designed to support.</p>
+        <p>My involvement spanned the brainstorming, testing, and design phases, with a focus on reworking the <strong>starting screen</strong> and <strong>character customization screen</strong>. I was also working on redesigning the tutorial scene, though that part of the project was cancelled before it shipped.</p>
+      </section>
 
-        <!-- Home Screen -->
-        <div class="cs-screen-finding">
-          <img src="images/Kim%20K/home%20screen%20old.png" alt="Sticky notes on old home screen" class="cs-img-full" loading="lazy" />
-          <div class="cs-finding-summary">
-            <h3 class="cs-subheading">Starting Screen — Key Findings</h3>
-            <div class="cs-findings">
-              <div class="cs-finding">
-                <span class="cs-finding-num">01</span>
-                <h4 class="cs-finding-title">Branding Needed a Refresh</h4>
-                <p>The game's identity is built around Luxury, Glamour, and High Fashion, but the starting screen wasn't communicating any of that. As the player's very first impression of the game, it needed to reflect the brand much more clearly and confidently.</p>
-              </div>
-              <div class="cs-finding">
-                <span class="cs-finding-num">02</span>
-                <h4 class="cs-finding-title">Visual Noise and Clutter</h4>
-                <p>The background environment behind the UI was too busy, with text and visual elements competing for attention rather than supporting it. This made it harder for players to focus on the key actions and UI buttons they actually needed to interact with.</p>
-              </div>
-              <div class="cs-finding">
-                <span class="cs-finding-num">03</span>
-                <h4 class="cs-finding-title">Outdated Visual Style</h4>
-                <p>The original design hadn't been meaningfully revisited since the game launched. Nearly a decade later, the visual language, typography, color, and layout felt out of step with where the game and its player base had grown.</p>
-              </div>
+      <!-- Problem -->
+      <section class="section" id="problem">
+        <div class="section-meta">
+          <span class="section-num">03</span>
+          <span class="section-pill">The problem</span>
+        </div>
+        <h2>Players were leaving early.</h2>
+        <p>Data reports showed low retention rates — a significant number of players were quitting or deleting the game after only the first few screens or a few minutes of gameplay. The core goal of the revamp was to address this and bring those retention numbers up.</p>
+        <p>The early drop-off pointed to the first impression as a key area of concern. If players weren't sticking around past the opening screens — the starting screen and character customization, the very first things they interact with — we needed to do a much better job of drawing them in.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-num">8 yrs</div>
+            <div class="stat-label">Since the UI was last meaningfully updated</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">2</div>
+            <div class="stat-label">Core screens redesigned end-to-end</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">10×</div>
+            <div class="stat-label">Catalogue growth the original layout couldn't support</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Audit -->
+      <section class="section" id="audit">
+        <div class="section-meta">
+          <span class="section-num">04</span>
+          <span class="section-pill">Screen audits</span>
+        </div>
+        <h2>Auditing what wasn't working.</h2>
+        <p>To understand why the opening screens weren't landing, team members tested the existing UI and documented observations directly on the screens — a quick, low-fidelity way to surface the most obvious friction before any redesign work began.</p>
+
+        <div class="audit">
+          <div class="audit-head">
+            <span class="audit-num">AUDIT 01</span>
+            <span class="audit-title">Starting screen</span>
+          </div>
+          <div class="audit-img-wrap">
+            <img class="audit-img" src="images/Kim%20K/home%20screen%20old.png" alt="Annotated audit of the original starting screen" loading="lazy" />
+          </div>
+          <div class="audit-findings">
+            <div>
+              <span class="audit-finding-num">FINDING 01</span>
+              <h4>Branding needed a refresh</h4>
+              <p>The game's identity is built around luxury, glamour, and high fashion — but the starting screen wasn't communicating any of that. As the player's very first impression, it needed to reflect the brand far more clearly.</p>
+            </div>
+            <div>
+              <span class="audit-finding-num">FINDING 02</span>
+              <h4>Visual noise and clutter</h4>
+              <p>The background environment competed with the UI rather than supporting it. Text and visual elements fought for attention, making it harder for players to focus on the actions they needed to take.</p>
+            </div>
+            <div>
+              <span class="audit-finding-num">FINDING 03</span>
+              <h4>Outdated visual style</h4>
+              <p>The original design hadn't been meaningfully revisited since launch. Nearly a decade later, the typography, color, and layout felt out of step with where the game and its player base had grown.</p>
             </div>
           </div>
         </div>
 
-        <!-- Customization Screen -->
-        <div class="cs-screen-finding">
-          <img src="images/Kim%20K/kustomize%20screen%20old.png" alt="Sticky notes on old customization screen" class="cs-img-full" loading="lazy" />
-          <div class="cs-finding-summary">
-            <h3 class="cs-subheading">Character Customization Screen — Key Findings</h3>
-            <div class="cs-findings">
-              <div class="cs-finding">
-                <span class="cs-finding-num">01</span>
-                <h4 class="cs-finding-title">Content Had Outgrown the Structure</h4>
-                <p>The character customization screen was built for a much smaller inventory. Years of new items and clothing options made it increasingly hard to browse, and the layout couldn't accommodate the volume without feeling cluttered and overwhelming.</p>
-              </div>
-              <div class="cs-finding">
-                <span class="cs-finding-num">02</span>
-                <h4 class="cs-finding-title">The UI Lacked Visual Cohesion</h4>
-                <p>Category icons were white, button borders were purple, the stars currency was gold, energy was blue, and cash was green. There was no unifying visual language holding it all together, and the result felt scattered and inconsistent rather than intentional.</p>
-              </div>
-              <div class="cs-finding">
-                <span class="cs-finding-num">03</span>
-                <h4 class="cs-finding-title">Navigation Relied Too Heavily on Icons Alone</h4>
-                <p>While the category icons were recognisable for the original item types, years of new additions meant many items no longer fit neatly under a single icon. Without category names or tooltips to support the icons, players had no clear way to tell where something would be found, making browsing more confusing than it needed to be.</p>
-              </div>
+        <div class="audit">
+          <div class="audit-head">
+            <span class="audit-num">AUDIT 02</span>
+            <span class="audit-title">Character customization screen</span>
+          </div>
+          <div class="audit-img-wrap">
+            <img class="audit-img" src="images/Kim%20K/kustomize%20screen%20old.png" alt="Annotated audit of the original customization screen" loading="lazy" />
+          </div>
+          <div class="audit-findings">
+            <div>
+              <span class="audit-finding-num">FINDING 01</span>
+              <h4>Content had outgrown the structure</h4>
+              <p>The customization screen was built for a much smaller inventory. Years of new items made browsing increasingly hard, and the layout couldn't accommodate the volume without feeling cluttered.</p>
+            </div>
+            <div>
+              <span class="audit-finding-num">FINDING 02</span>
+              <h4>UI lacked visual cohesion</h4>
+              <p>Category icons were white, button borders purple, stars gold, energy blue, cash green. There was no unifying visual language — the result felt scattered rather than intentional.</p>
+            </div>
+            <div>
+              <span class="audit-finding-num">FINDING 03</span>
+              <h4>Navigation relied too heavily on icons</h4>
+              <p>Many newer items no longer fit neatly under a single icon, but there were no category names or tooltips to support them. Players had no clear way to tell where something would be found.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- RESULTS -->
-      <section class="cs-section">
-        <span class="cs-section-label">Results</span>
-        <h2>The Redesign</h2>
-        <img src="images/Kim%20K/home%20screen%20new.png" alt="Redesigned home screen" class="cs-img-full" loading="lazy" />
-        <div class="cs-findings" style="margin-top: 2rem;">
-          <div class="cs-finding">
-            <span class="cs-finding-num">01</span>
-            <h4 class="cs-finding-title">Gold as the Design Foundation</h4>
-            <p>The team all loved the golden "Start" button from the original design, so we carried it forward into the redesign. From there, we built an entire visual language around it, using gold and metallic sheen as the anchoring aesthetic to communicate the luxury and glamour the brand had always stood for but never fully expressed visually.</p>
+      <!-- Approach -->
+      <section class="section" id="approach">
+        <div class="section-meta">
+          <span class="section-num">05</span>
+          <span class="section-pill">Design approach</span>
+        </div>
+        <h2>Anchoring the redesign in gold.</h2>
+        <p>The team all loved the golden "Start" button from the original design — so we carried it forward as the anchor of the redesign. From there, we built an entire visual language around it: gold and metallic sheen as the foundation, communicating the luxury and glamour the brand had always stood for but never fully expressed visually.</p>
+        <p>The principle behind every decision: <strong>elevate the visual language; don't disorient the existing player base.</strong> Refresh the look and feel; keep the muscle memory.</p>
+      </section>
+
+      <!-- Home redesign -->
+      <section class="section" id="home">
+        <div class="section-meta">
+          <span class="section-num">06</span>
+          <span class="section-pill">Home screen</span>
+        </div>
+        <h2>Home screen redesign.</h2>
+
+        <div class="ba">
+          <div class="ba-cell">
+            <span class="ba-label">Before</span>
+            <img src="images/Kim%20K/home%20screen%20old.png" alt="Original home screen" loading="lazy" />
           </div>
-          <div class="cs-finding">
-            <span class="cs-finding-num">02</span>
-            <h4 class="cs-finding-title">A Cleaner, More Focused Screen</h4>
-            <p>The cluttered background environment was replaced with a clean, minimal backdrop that lets the character and UI take center stage. Removing the visual noise meant players could immediately focus on the key actions in front of them rather than competing with everything around it.</p>
-          </div>
-          <div class="cs-finding">
-            <span class="cs-finding-num">03</span>
-            <h4 class="cs-finding-title">Typography That Feels Like the Brand</h4>
-            <p>We replaced the outdated typefaces with fonts that draw on the visual language of high-end luxury brands, the kind you'd see on a fashion house billboard or a couture label. The new typography instantly elevates the tone and signals to players exactly what kind of world they're stepping into.</p>
+          <div class="ba-cell">
+            <span class="ba-label ba-label--after">After</span>
+            <img src="images/Kim%20K/home%20screen%20new.png" alt="Redesigned home screen" loading="lazy" />
           </div>
         </div>
-        <img src="images/Kim%20K/kustomize%20screen%20new.png" alt="Redesigned customization screen" class="cs-img-full" loading="lazy" style="margin-top: 3rem;" />
-        <div class="cs-findings" style="margin-top: 2rem;">
-          <div class="cs-finding">
-            <span class="cs-finding-num">01</span>
-            <h4 class="cs-finding-title">A Unified Icon Set</h4>
-            <p>All category icons were redesigned using the same gold metallic palette introduced on the home screen. The new icons are cleaner, more readable, and visually consistent with one another, bringing a cohesion to the UI that the original design never had.</p>
+
+        <div class="findings">
+          <div class="finding">
+            <div class="finding-num">CHANGE 01</div>
+            <h4>Gold as the design foundation</h4>
+            <p>The original golden "Start" button became the anchor for an entire metallic visual language — finally giving the brand the luxury and glamour it had always stood for.</p>
           </div>
-          <div class="cs-finding">
-            <span class="cs-finding-num">02</span>
-            <h4 class="cs-finding-title">Named Categories for Clearer Navigation</h4>
-            <p>Icon labels were added to every category, so players no longer have to guess where something lives. The combination of a redesigned icon and a clear name makes browsing significantly faster and less frustrating, especially as the item catalogue continues to grow.</p>
+          <div class="finding">
+            <div class="finding-num">CHANGE 02</div>
+            <h4>A cleaner, more focused screen</h4>
+            <p>The cluttered background was replaced with a clean, minimal backdrop that lets the character and UI take center stage — no more competing for attention.</p>
           </div>
-          <div class="cs-finding">
-            <span class="cs-finding-num">03</span>
-            <h4 class="cs-finding-title">Familiar Layout, Refreshed Look</h4>
-            <p>The three-per-row grid structure that longtime players know was kept intentionally intact. The goal was to modernise the visual experience and improve navigation without disorienting the existing player base. The layout stays the same, everything else gets elevated.</p>
+          <div class="finding">
+            <div class="finding-num">CHANGE 03</div>
+            <h4>Typography that feels like the brand</h4>
+            <p>Outdated typefaces were swapped for fonts drawn from high-end luxury and couture references — instantly signaling the kind of world players are stepping into.</p>
           </div>
         </div>
       </section>
 
-      <!-- 2D WORK -->
-      <section class="cs-section">
-        <span class="cs-section-label">2D Art</span>
-        <h2>Some of My 2D Work</h2>
-        <p>Check out some of my 2D asset work for the game! Done using Adobe Photoshop and Illustrator.</p>
-        <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
-          <img src="images/Kim%20K/set7.png" alt="2D game art set 7" class="cs-img-full" loading="lazy" />
-          <img src="images/Kim%20K/set9.png" alt="2D game art set 9" class="cs-img-full" loading="lazy" />
-          <img src="images/Kim%20K/set10.png" alt="2D game art set 10" class="cs-img-full" loading="lazy" />
+      <!-- Customization redesign -->
+      <section class="section" id="customize">
+        <div class="section-meta">
+          <span class="section-num">07</span>
+          <span class="section-pill">Customization</span>
+        </div>
+        <h2>Customization screen redesign.</h2>
+
+        <div class="ba">
+          <div class="ba-cell">
+            <span class="ba-label">Before</span>
+            <img src="images/Kim%20K/kustomize%20screen%20old.png" alt="Original customization screen" loading="lazy" />
+          </div>
+          <div class="ba-cell">
+            <span class="ba-label ba-label--after">After</span>
+            <img src="images/Kim%20K/kustomize%20screen%20new.png" alt="Redesigned customization screen" loading="lazy" />
+          </div>
+        </div>
+
+        <div class="findings">
+          <div class="finding">
+            <div class="finding-num">CHANGE 01</div>
+            <h4>A unified icon set</h4>
+            <p>All category icons were redesigned in the same gold metallic palette, bringing a cohesion to the UI that the original never had.</p>
+          </div>
+          <div class="finding">
+            <div class="finding-num">CHANGE 02</div>
+            <h4>Named categories</h4>
+            <p>Labels were added to every icon. The combination of redesigned icon + clear name makes browsing significantly faster, especially as the catalogue keeps growing.</p>
+          </div>
+          <div class="finding">
+            <div class="finding-num">CHANGE 03</div>
+            <h4>Familiar layout, refreshed look</h4>
+            <p>The three-per-row grid longtime players know was kept intact. Modernise the visuals; don't disorient the muscle memory.</p>
+          </div>
         </div>
       </section>
 
-    </div><!-- /cs-body -->
+      <!-- 2D Art -->
+      <section class="section" id="art">
+        <div class="section-meta">
+          <span class="section-num">08</span>
+          <span class="section-pill">2D art</span>
+        </div>
+        <h2>Some of my 2D work.</h2>
+        <p>Outside the UI/UX revamp, I produced 2D asset sets for the game using Adobe Photoshop and Illustrator.</p>
+        <div class="img-grid">
+          <img src="images/Kim%20K/set7.png" alt="2D game art set 7" loading="lazy" />
+          <img src="images/Kim%20K/set9.png" alt="2D game art set 9" loading="lazy" />
+          <img src="images/Kim%20K/set10.png" alt="2D game art set 10" loading="lazy" />
+        </div>
+      </section>
 
-    <!-- FOOTER -->
-    <footer class="site-footer cs-footer">
-      <p>© 2026 Katie Lei &nbsp;·&nbsp; <a href="index.html#work" class="cs-footer-link">← Back to all work</a></p>
-    </footer>
+      <!-- Reflection -->
+      <section class="section" id="reflection">
+        <div class="section-meta">
+          <span class="section-num">09</span>
+          <span class="section-pill">Reflection</span>
+        </div>
+        <h2>What I learned.</h2>
+        <p><strong>Anchor the new in something old.</strong> Carrying forward the gold "Start" button gave the redesign continuity and a built-in answer to "why this direction?" — a single beloved element became the seed of an entire visual system.</p>
+        <p><strong>Refresh, don't relocate.</strong> Keeping the three-per-row grid was a deliberate choice to respect existing players' muscle memory. Visual modernization without behavioral disruption is a much harder bar to clear than a clean-sheet redesign — and a much more useful one in a live, mature product.</p>
+        <p><strong>Audit before you redesign.</strong> The sticky-note audits surfaced obvious problems quickly and cheaply, and gave the whole team a shared vocabulary for the issues. It set the redesign up to solve real, observed problems instead of guessing.</p>
 
-  </main>
+        <div class="cta-row">
+          <a href="bakebasket-case-study.html" class="btn btn-primary">
+            <span>Next case study</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="index.html#work" class="btn btn-secondary">
+            <span>Back to work</span>
+          </a>
+        </div>
+      </section>
+
+    </article>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Page navigation">
+    <a href="index.html#work" class="bottom-nav-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All work
+    </a>
+    <a href="bakebasket-case-study.html" class="bottom-nav-link">
+      Next case study: Bake Basket
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </nav>
+
+  <footer class="footer">
+    <p>© 2026 Katie Lei · Toronto, ON</p>
+    <div class="footer-links">
+      <a href="mailto:katie.sinlei@gmail.com">Email</a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#" target="_blank" rel="noopener">Dribbble</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var bar = document.getElementById('progress');
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement;
+        var scrolled = h.scrollTop || document.body.scrollTop;
+        var max = h.scrollHeight - h.clientHeight;
+        bar.style.width = max > 0 ? (scrolled / max * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+
+    (function() {
+      var sections = document.querySelectorAll('.section[id]');
+      var links = document.querySelectorAll('#tocList a');
+      if (!('IntersectionObserver' in window)) return;
+      var byId = {};
+      links.forEach(function(a) {
+        var id = a.getAttribute('href').replace('#','');
+        byId[id] = a;
+      });
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            links.forEach(function(a) { a.classList.remove('is-active'); });
+            var a = byId[e.target.id];
+            if (a) a.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+      sections.forEach(function(s) { io.observe(s); });
+    })();
+  </script>
 
 </body>
 </html>
