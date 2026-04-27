@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volleyball Team Branding — Katie Lei</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #FAFAF9;
+      --bg-2:         #F4F3F0;
+      --bg-3:         #EAE8E3;
+      --rule:         #E5E3DD;
+      --rule-strong:  #D4D1C8;
+      --ink:          #1A1A1A;
+      --ink-2:        #4A4A48;
+      --ink-3:        #807E78;
+      --ink-4:        #B5B2A8;
+      --accent:       #2E6E5E;
+      --accent-soft:  #DCE8E2;
+
+      --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+      --radius-sm:    6px;
+      --radius:       10px;
+      --radius-lg:    16px;
+
+      --shadow-sm:    0 1px 2px rgba(0,0,0,0.04);
+      --shadow:       0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.05);
+      --shadow-lg:    0 8px 24px -8px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.04);
+
+      --sidebar-w:    280px;
+      --content-max:  720px;
+      --wide-max:     1100px;
+
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px; line-height: 1.6;
+      color: var(--ink); background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'cv11', 'ss01', 'kern';
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* Top bar */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 2rem;
+      background: rgba(250,250,249,0.85);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+    .topbar-brand { font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .topbar-crumb {
+      display: none;
+      font-size: 0.85rem; color: var(--ink-3);
+      align-items: center; gap: 0.5rem;
+    }
+    @media (min-width: 720px) { .topbar-crumb { display: inline-flex; } }
+    .topbar-crumb-sep { color: var(--ink-4); }
+    .topbar-crumb-current { color: var(--ink); font-weight: 500; }
+    .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-link {
+      font-size: 0.85rem; color: var(--ink-2);
+      padding: 0.4rem 0.75rem; border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms;
+    }
+    .topbar-link:hover { background: var(--bg-2); color: var(--ink); }
+    .topbar-cta {
+      font-size: 0.85rem; font-weight: 500;
+      padding: 0.5rem 0.85rem;
+      background: var(--ink); color: var(--bg);
+      border-radius: var(--radius-sm);
+      transition: background 150ms;
+    }
+    .topbar-cta:hover { background: var(--ink-2); }
+
+    /* Reading progress */
+    .progress {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: transparent; z-index: 200;
+    }
+    .progress-bar {
+      height: 100%; width: 0%; background: var(--accent);
+      transition: width 80ms linear;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: var(--wide-max);
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--ink-2);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .hero-title {
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      font-weight: 600; line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+      max-width: 18ch; text-wrap: balance;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      line-height: 1.5;
+      color: var(--ink-2);
+      max-width: 56ch;
+      margin-bottom: 3rem;
+      text-wrap: pretty;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 1.5rem 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    @media (max-width: 720px) { .hero-meta { grid-template-columns: repeat(2, 1fr); } }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 0.35rem; }
+    .hero-meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; color: var(--ink-3);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .hero-meta-value { font-size: 0.92rem; font-weight: 500; color: var(--ink); }
+
+    /* Cover */
+    .cover-wrap {
+      max-width: 360px;
+      margin: 0 auto 4rem;
+      padding: 0 2rem;
+    }
+    .cover {
+      width: 100%; height: auto; display: block;
+      border-radius: var(--radius-lg);
+      background: var(--bg-2);
+      box-shadow: var(--shadow-lg);
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    /* Layout */
+    .layout {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .layout { grid-template-columns: 1fr; gap: 0; } }
+
+    .toc {
+      position: sticky; top: 88px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+    @media (max-width: 980px) { .toc { display: none; } }
+    .toc-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; color: var(--ink-3);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.1rem;
+      border-left: 1px solid var(--rule);
+    }
+    .toc-list a {
+      display: block;
+      padding: 0.45rem 0 0.45rem 1rem;
+      margin-left: -1px;
+      border-left: 1px solid transparent;
+      font-size: 0.85rem;
+      color: var(--ink-3);
+      transition: color 150ms, border-color 150ms;
+    }
+    .toc-list a:hover { color: var(--ink); }
+    .toc-list a.is-active {
+      color: var(--ink);
+      border-left-color: var(--ink);
+      font-weight: 500;
+    }
+
+    .content { max-width: var(--content-max); min-width: 0; }
+
+    .section {
+      padding: 3rem 0;
+      border-top: 1px solid var(--rule);
+      scroll-margin-top: 88px;
+    }
+    .section:first-child { border-top: none; padding-top: 0; }
+    .section-meta {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-num { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-3); }
+    .section-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      color: var(--ink-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .section h2 {
+      font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+      font-weight: 600; line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+    .section h3 {
+      font-size: 1.05rem; font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 2.5rem 0 0.85rem;
+      color: var(--ink);
+    }
+    .section p {
+      font-size: 1rem; line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 64ch;
+    }
+    .section p + p { margin-top: 0.85rem; }
+    .section p strong { color: var(--ink); font-weight: 600; }
+
+    /* Summary */
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+    @media (max-width: 720px) { .summary { grid-template-columns: 1fr; } }
+    .summary-cell {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .summary-cell:nth-child(2n) { border-right: none; }
+    .summary-cell:nth-last-child(-n+2) { border-bottom: none; }
+    @media (max-width: 720px) {
+      .summary-cell { border-right: none !important; border-bottom: 1px solid var(--rule) !important; }
+      .summary-cell:last-child { border-bottom: none !important; }
+    }
+    .summary-label {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--ink-3); text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 0.5rem;
+    }
+    .summary-text { font-size: 0.92rem; color: var(--ink); line-height: 1.55; }
+
+    /* Brand pillars (3-up) */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 720px) { .pillars { grid-template-columns: 1fr; } }
+    .pillar {
+      padding: 1.5rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    .pillar-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+    .pillar-name {
+      font-size: 1.5rem; font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+    .pillar-text {
+      font-size: 0.9rem; line-height: 1.55;
+      color: var(--ink-2);
+    }
+
+    /* Color palette */
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .palette { grid-template-columns: repeat(2, 1fr); } }
+    .swatch {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .swatch-color {
+      aspect-ratio: 1/1;
+      width: 100%;
+      display: block;
+    }
+    .swatch-meta {
+      padding: 0.85rem 1rem;
+      border-top: 1px solid var(--rule);
+    }
+    .swatch-name {
+      font-size: 0.9rem; font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .swatch-hex {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+    }
+
+    /* Typography specimen */
+    .type-spec {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 2rem 1.75rem;
+      margin: 1rem 0;
+      background: var(--bg);
+    }
+    .type-spec + .type-spec { margin-top: 0.75rem; }
+    .type-spec-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.85rem;
+    }
+    .type-spec-name {
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.85rem;
+      color: var(--ink);
+    }
+    .type-spec-meta {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+    }
+
+    /* Image blocks */
+    .img-full {
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .img-grid { grid-template-columns: 1fr; } }
+    .img-grid img {
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--bg-2);
+      box-shadow: var(--shadow-sm);
+    }
+    .img-grid--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 720px) { .img-grid--3 { grid-template-columns: 1fr; } }
+
+    /* Logo display block */
+    .logo-block {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      background: var(--bg);
+      padding: 3rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 16/9;
+      margin: 1rem 0;
+    }
+    .logo-block-dark {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+    .logo-block img {
+      max-width: 60%;
+      max-height: 80%;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Placeholder image */
+    .placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          var(--bg-2),
+          var(--bg-2) 10px,
+          var(--bg-3) 10px,
+          var(--bg-3) 20px
+        );
+      border: 1px dashed var(--rule-strong);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Takeaways */
+    .takeaways {
+      list-style: none;
+      display: flex; flex-direction: column;
+      counter-reset: tk;
+      margin: 1rem 0;
+    }
+    .takeaways li {
+      counter-increment: tk;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 0.75rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.95rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+    .takeaways li:last-child { border-bottom: none; }
+    .takeaways li::before {
+      content: counter(tk, decimal-leading-zero);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      padding-top: 1px;
+    }
+
+    /* CTA */
+    .cta-row {
+      display: flex; gap: 0.75rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.1rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem; font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms, border-color 150ms;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--ink); color: var(--bg); }
+    .btn-primary:hover { background: var(--ink-2); }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+    .btn-secondary:hover { background: var(--bg-2); }
+
+    /* Bottom navigation */
+    .bottom-nav {
+      max-width: var(--wide-max);
+      margin: 4rem auto 0;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .bottom-nav-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9rem; color: var(--ink-2);
+      padding: 0.5rem 0;
+      transition: color 150ms;
+    }
+    .bottom-nav-link:hover { color: var(--ink); }
+    .bottom-nav-link svg { transition: transform 200ms var(--ease); }
+    .bottom-nav-link:hover svg { transform: translateX(2px); }
+
+    .footer {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem;
+      color: var(--ink-3);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-links { display: flex; gap: 1.25rem; }
+    .footer-links a:hover { color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .topbar { padding: 0.75rem 1.25rem; }
+      .hero { padding: 3rem 1.25rem 2rem; }
+      .cover-wrap, .layout, .bottom-nav, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-brand">Katie Lei</a>
+      <span class="topbar-crumb">
+        <a href="index.html#work" class="topbar-link" style="padding:0">Work</a>
+        <span class="topbar-crumb-sep">/</span>
+        <span class="topbar-crumb-current">Volleyball Team Branding</span>
+      </span>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html#contact" class="topbar-link">Contact</a>
+      <a href="game-revamp-case-study.html" class="topbar-cta">Next case study →</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Case study · Brand identity
+    </span>
+    <h1 class="hero-title">Building the brand identity for a local volleyball team.</h1>
+    <p class="hero-subtitle">An end-to-end brand identity project — from positioning and pillars to logo, color, typography, merchandise, and team jerseys. Calm, direct, hungry.</p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Role</span>
+        <span class="hero-meta-value">Brand Designer</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Scope</span>
+        <span class="hero-meta-value">Identity, Merch, Jerseys</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Client</span>
+        <span class="hero-meta-value">Local volleyball team</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Tools</span>
+        <span class="hero-meta-value">Illustrator, Photoshop</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cover -->
+  <div class="cover-wrap">
+    <div class="placeholder" style="aspect-ratio: 4/3;">Cover image · 4:3</div>
+  </div>
+
+  <!-- Layout -->
+  <div class="layout">
+
+    <aside class="toc" aria-label="Contents">
+      <p class="toc-label">Contents</p>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#summary" class="is-active">Summary</a></li>
+        <li><a href="#context">Context</a></li>
+        <li><a href="#pillars">Brand pillars</a></li>
+        <li><a href="#logo">Logo</a></li>
+        <li><a href="#color">Color palette</a></li>
+        <li><a href="#typography">Typography</a></li>
+        <li><a href="#merch">Merchandise</a></li>
+        <li><a href="#jerseys">Jerseys</a></li>
+        <li><a href="#reflection">Reflection</a></li>
+      </ul>
+    </aside>
+
+    <article class="content">
+
+      <!-- Summary -->
+      <section class="section" id="summary">
+        <div class="section-meta">
+          <span class="section-num">01</span>
+          <span class="section-pill">Summary</span>
+        </div>
+        <h2>At a glance</h2>
+        <p>A local volleyball team needed a brand identity that matched how they actually play and carry themselves on court — calm, direct, and hungry. I built the identity from the ground up: positioning, logo, color, typography, and the applied design system across merchandise and team jerseys.</p>
+
+        <div class="summary">
+          <div class="summary-cell">
+            <p class="summary-label">Goal</p>
+            <p class="summary-text">A cohesive identity that scales from a court bench to a hoodie to a printed jersey.</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Approach</p>
+            <p class="summary-text">Pillars first, visuals second — every design decision laddering back to "calm, direct, hungry."</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Deliverables</p>
+            <p class="summary-text">Logo system, color palette, type system, merch designs, jersey designs.</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Outcome</p>
+            <p class="summary-text">A brand the team can wear, post, and play in — consistent across every touchpoint.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Context -->
+      <section class="section" id="context">
+        <div class="section-meta">
+          <span class="section-num">02</span>
+          <span class="section-pill">Context</span>
+        </div>
+        <h2>Starting with who they actually are.</h2>
+        <p><em>[Add context about the team here — when you started working with them, where they play, what stage they were at, and what brought them to ask for branding help.]</em></p>
+        <p><em>[Add a short paragraph on the brief — what they asked for, what they didn't have, and why "DIY brand" wasn't going to scale with them.]</em></p>
+      </section>
+
+      <!-- Brand pillars -->
+      <section class="section" id="pillars">
+        <div class="section-meta">
+          <span class="section-num">03</span>
+          <span class="section-pill">Brand pillars</span>
+        </div>
+        <h2>Calm. Direct. Hungry.</h2>
+        <p>Three words, chosen deliberately, that every visual decision had to honor. They captured how the team plays — composed under pressure, no wasted movement, always looking for the next point.</p>
+
+        <div class="pillars">
+          <div class="pillar">
+            <div class="pillar-label">Pillar 01</div>
+            <div class="pillar-name">Calm</div>
+            <p class="pillar-text"><em>[How does this show up visually? e.g. neutral base, generous space, restrained type.]</em></p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-label">Pillar 02</div>
+            <div class="pillar-name">Direct</div>
+            <p class="pillar-text"><em>[How does this show up visually? e.g. simple wordmark, no decoration, clear hierarchy.]</em></p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-label">Pillar 03</div>
+            <div class="pillar-name">Hungry</div>
+            <p class="pillar-text"><em>[How does this show up visually? e.g. saturated accent, sharp angles, confident weight.]</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Logo -->
+      <section class="section" id="logo">
+        <div class="section-meta">
+          <span class="section-num">04</span>
+          <span class="section-pill">Logo</span>
+        </div>
+        <h2>The mark.</h2>
+        <p><em>[Talk through the logo concept — what it's referencing, how it ladders back to the pillars, and why the form works for the team.]</em></p>
+
+        <div class="logo-block">
+          <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase;">Primary logo</div>
+        </div>
+        <div class="logo-block logo-block-dark">
+          <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--ink-4); letter-spacing: 0.04em; text-transform: uppercase;">Inverted logo</div>
+        </div>
+
+        <h3>Lockups &amp; variations</h3>
+        <p><em>[Drop in any sub-marks, monograms, horizontal lockups, or social avatar variants.]</em></p>
+
+        <div class="img-grid img-grid--3">
+          <div class="placeholder" style="aspect-ratio: 1/1;">Mark</div>
+          <div class="placeholder" style="aspect-ratio: 1/1;">Monogram</div>
+          <div class="placeholder" style="aspect-ratio: 1/1;">Avatar</div>
+        </div>
+      </section>
+
+      <!-- Color -->
+      <section class="section" id="color">
+        <div class="section-meta">
+          <span class="section-num">05</span>
+          <span class="section-pill">Color</span>
+        </div>
+        <h2>Color palette.</h2>
+        <p><em>[Explain the palette — anchor color, neutrals, accent, and how each one supports calm / direct / hungry.]</em></p>
+
+        <div class="palette">
+          <div class="swatch">
+            <div class="swatch-color" style="background: #1A1A1A;"></div>
+            <div class="swatch-meta">
+              <div class="swatch-name">Court Black</div>
+              <div class="swatch-hex">#1A1A1A</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background: #FAFAF9; border-bottom: 1px solid var(--rule);"></div>
+            <div class="swatch-meta">
+              <div class="swatch-name">Chalk</div>
+              <div class="swatch-hex">#FAFAF9</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background: #2E6E5E;"></div>
+            <div class="swatch-meta">
+              <div class="swatch-name">Field Green</div>
+              <div class="swatch-hex">#2E6E5E</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background: #E5C26A;"></div>
+            <div class="swatch-meta">
+              <div class="swatch-name">Hungry Gold</div>
+              <div class="swatch-hex">#E5C26A</div>
+            </div>
+          </div>
+        </div>
+        <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-3); margin-top: 0.5rem;"><em>Placeholder swatches — swap with the real palette.</em></p>
+      </section>
+
+      <!-- Typography -->
+      <section class="section" id="typography">
+        <div class="section-meta">
+          <span class="section-num">06</span>
+          <span class="section-pill">Typography</span>
+        </div>
+        <h2>Type system.</h2>
+        <p><em>[Explain the type pairing — what role each typeface plays, why they were chosen, and how they ladder back to the pillars.]</em></p>
+
+        <div class="type-spec">
+          <div class="type-spec-label">Display · Headlines</div>
+          <div class="type-spec-name" style="font-family: var(--font-sans); font-weight: 700;">Aa Bb Cc 1234</div>
+          <div class="type-spec-meta">[Typeface name] · Weights used · Sample purpose</div>
+        </div>
+        <div class="type-spec">
+          <div class="type-spec-label">Body · Reading text</div>
+          <div class="type-spec-name" style="font-family: var(--font-sans); font-weight: 400; font-size: 1.5rem;">The quick brown fox jumps over the lazy dog.</div>
+          <div class="type-spec-meta">[Typeface name] · Weights used · Sample purpose</div>
+        </div>
+        <div class="type-spec">
+          <div class="type-spec-label">Numerals · Jerseys, scoreboards</div>
+          <div class="type-spec-name" style="font-family: var(--font-mono); font-weight: 600;">0 1 2 3 4 5 6 7 8 9</div>
+          <div class="type-spec-meta">[Typeface name] · Weights used · Sample purpose</div>
+        </div>
+      </section>
+
+      <!-- Merch -->
+      <section class="section" id="merch">
+        <div class="section-meta">
+          <span class="section-num">07</span>
+          <span class="section-pill">Merchandise</span>
+        </div>
+        <h2>Applied to merch.</h2>
+        <p><em>[Talk about what merch you designed — t-shirts, hoodies, hats, stickers, water bottles, etc. — and any decisions specific to merch (placement, scale, single-color treatments).]</em></p>
+
+        <div class="img-grid">
+          <div class="placeholder">Merch · Hoodie</div>
+          <div class="placeholder">Merch · T-shirt</div>
+          <div class="placeholder">Merch · Hat</div>
+          <div class="placeholder">Merch · Sticker pack</div>
+        </div>
+      </section>
+
+      <!-- Jerseys -->
+      <section class="section" id="jerseys">
+        <div class="section-meta">
+          <span class="section-num">08</span>
+          <span class="section-pill">Jerseys</span>
+        </div>
+        <h2>The team jerseys.</h2>
+        <p><em>[Talk through the jersey design — home / away kit, number treatment, any constraints from the league or sublimation printing, and how the brand pillars guided the final look.]</em></p>
+
+        <div class="img-grid">
+          <div class="placeholder">Home jersey</div>
+          <div class="placeholder">Away jersey</div>
+        </div>
+
+        <h3>Number &amp; name system</h3>
+        <p><em>[Optional: show how player numbers and names are treated — wordmark on chest, number on back, sleeve callouts, etc.]</em></p>
+        <div class="placeholder" style="aspect-ratio: 16/9;">Jersey detail / number system</div>
+      </section>
+
+      <!-- Reflection -->
+      <section class="section" id="reflection">
+        <div class="section-meta">
+          <span class="section-num">09</span>
+          <span class="section-pill">Reflection</span>
+        </div>
+        <h2>What I learned.</h2>
+        <p><em>[Reflection 1 — something that surprised you about working on a sports brand vs. other branding.]</em></p>
+        <p><em>[Reflection 2 — something about working with a real client team rather than a brief you wrote yourself.]</em></p>
+        <p><em>[Reflection 3 — what you'd do differently or what's next for the brand.]</em></p>
+
+        <div class="cta-row">
+          <a href="game-revamp-case-study.html" class="btn btn-primary">
+            <span>Next case study</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="index.html#work" class="btn btn-secondary">
+            <span>Back to work</span>
+          </a>
+        </div>
+      </section>
+
+    </article>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Page navigation">
+    <a href="index.html#work" class="bottom-nav-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All work
+    </a>
+    <a href="game-revamp-case-study.html" class="bottom-nav-link">
+      Next case study: Electronic Arts
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </nav>
+
+  <footer class="footer">
+    <p>© 2026 Katie Lei · Toronto, ON</p>
+    <div class="footer-links">
+      <a href="mailto:katie.sinlei@gmail.com">Email</a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#" target="_blank" rel="noopener">Dribbble</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var bar = document.getElementById('progress');
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement;
+        var scrolled = h.scrollTop || document.body.scrollTop;
+        var max = h.scrollHeight - h.clientHeight;
+        bar.style.width = max > 0 ? (scrolled / max * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+
+    (function() {
+      var sections = document.querySelectorAll('.section[id]');
+      var links = document.querySelectorAll('#tocList a');
+      if (!('IntersectionObserver' in window)) return;
+      var byId = {};
+      links.forEach(function(a) {
+        var id = a.getAttribute('href').replace('#','');
+        byId[id] = a;
+      });
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            links.forEach(function(a) { a.classList.remove('is-active'); });
+            var a = byId[e.target.id];
+            if (a) a.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+      sections.forEach(function(s) { io.observe(s); });
+    })();
+  </script>
+
+</body>
+</html>
