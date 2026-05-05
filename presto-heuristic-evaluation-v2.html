@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presto Heuristic Evaluation — Katie Lei</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #FAFAF9;
+      --bg-2:         #F4F3F0;
+      --bg-3:         #EAE8E3;
+      --rule:         #E5E3DD;
+      --rule-strong:  #D4D1C8;
+      --ink:          #1A1A1A;
+      --ink-2:        #4A4A48;
+      --ink-3:        #807E78;
+      --ink-4:        #B5B2A8;
+      --accent:       #1F6FB2;       /* Presto-adjacent transit blue */
+      --accent-soft:  #E0EDF7;
+      --severity-1:   #6B8E50;       /* cosmetic */
+      --severity-2:   #C19A2C;       /* minor */
+      --severity-3:   #C76A2E;       /* major */
+      --severity-4:   #B94040;       /* catastrophic */
+
+      --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+      --radius-sm:    6px;
+      --radius:       10px;
+      --radius-lg:    16px;
+
+      --shadow-sm:    0 1px 2px rgba(0,0,0,0.04);
+      --shadow:       0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.05);
+      --shadow-lg:    0 8px 24px -8px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.04);
+
+      --sidebar-w:    280px;
+      --content-max:  720px;
+      --wide-max:     1100px;
+
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px; line-height: 1.6;
+      color: var(--ink); background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'cv11', 'ss01', 'kern';
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* Top bar */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 2rem;
+      background: rgba(250,250,249,0.85);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+    .topbar-brand { font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .topbar-crumb {
+      display: none;
+      font-size: 0.85rem; color: var(--ink-3);
+      align-items: center; gap: 0.5rem;
+    }
+    @media (min-width: 720px) { .topbar-crumb { display: inline-flex; } }
+    .topbar-crumb-sep { color: var(--ink-4); }
+    .topbar-crumb-current { color: var(--ink); font-weight: 500; }
+    .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
+    .topbar-link {
+      font-size: 0.85rem; color: var(--ink-2);
+      padding: 0.4rem 0.75rem; border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms;
+    }
+    .topbar-link:hover { background: var(--bg-2); color: var(--ink); }
+    .topbar-cta {
+      font-size: 0.85rem; font-weight: 500;
+      padding: 0.5rem 0.85rem;
+      background: var(--ink); color: var(--bg);
+      border-radius: var(--radius-sm);
+      transition: background 150ms;
+    }
+    .topbar-cta:hover { background: var(--ink-2); }
+
+    /* Reading progress */
+    .progress {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: transparent; z-index: 200;
+    }
+    .progress-bar {
+      height: 100%; width: 0%; background: var(--accent);
+      transition: width 80ms linear;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: var(--wide-max);
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--ink-2);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .hero-title {
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      font-weight: 600; line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+      max-width: 20ch; text-wrap: balance;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      line-height: 1.5;
+      color: var(--ink-2);
+      max-width: 60ch;
+      margin-bottom: 3rem;
+      text-wrap: pretty;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 1.5rem 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    @media (max-width: 720px) { .hero-meta { grid-template-columns: repeat(2, 1fr); } }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 0.35rem; }
+    .hero-meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; color: var(--ink-3);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .hero-meta-value { font-size: 0.92rem; font-weight: 500; color: var(--ink); }
+
+    /* Cover */
+    .cover-wrap {
+      max-width: 720px;
+      margin: 0 auto 4rem;
+      padding: 0 2rem;
+    }
+    .cover {
+      width: 100%; height: auto; display: block;
+      border-radius: var(--radius-lg);
+      background: var(--bg-2);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Layout */
+    .layout {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .layout { grid-template-columns: 1fr; gap: 0; } }
+
+    .toc {
+      position: sticky; top: 88px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+    @media (max-width: 980px) { .toc { display: none; } }
+    .toc-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; color: var(--ink-3);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.1rem;
+      border-left: 1px solid var(--rule);
+    }
+    .toc-list a {
+      display: block;
+      padding: 0.45rem 0 0.45rem 1rem;
+      margin-left: -1px;
+      border-left: 1px solid transparent;
+      font-size: 0.85rem;
+      color: var(--ink-3);
+      transition: color 150ms, border-color 150ms;
+    }
+    .toc-list a:hover { color: var(--ink); }
+    .toc-list a.is-active {
+      color: var(--ink);
+      border-left-color: var(--ink);
+      font-weight: 500;
+    }
+
+    .content { max-width: var(--content-max); min-width: 0; }
+
+    .section {
+      padding: 3rem 0;
+      border-top: 1px solid var(--rule);
+      scroll-margin-top: 88px;
+    }
+    .section:first-child { border-top: none; padding-top: 0; }
+    .section-meta {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-num { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-3); }
+    .section-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 9999px;
+      color: var(--ink-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .section h2 {
+      font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+      font-weight: 600; line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+    .section h3 {
+      font-size: 1.05rem; font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 2.5rem 0 0.85rem;
+      color: var(--ink);
+    }
+    .section p {
+      font-size: 1rem; line-height: 1.65;
+      color: var(--ink-2);
+      max-width: 64ch;
+    }
+    .section p + p { margin-top: 0.85rem; }
+    .section p strong { color: var(--ink); font-weight: 600; }
+
+    /* Summary */
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+    @media (max-width: 720px) { .summary { grid-template-columns: 1fr; } }
+    .summary-cell {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .summary-cell:nth-child(2n) { border-right: none; }
+    .summary-cell:nth-last-child(-n+2) { border-bottom: none; }
+    @media (max-width: 720px) {
+      .summary-cell { border-right: none !important; border-bottom: 1px solid var(--rule) !important; }
+      .summary-cell:last-child { border-bottom: none !important; }
+    }
+    .summary-label {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--ink-3); text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 0.5rem;
+    }
+    .summary-text { font-size: 0.92rem; color: var(--ink); line-height: 1.55; }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+    .stat {
+      padding: 1.25rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    .stat-num {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label { font-size: 0.82rem; color: var(--ink-3); line-height: 1.4; }
+
+    /* Severity legend */
+    .severity-legend {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .severity-legend { grid-template-columns: repeat(2, 1fr); } }
+    .sev {
+      padding: 0.85rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+    }
+    .sev-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .sev-label {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-weight: 600; color: var(--ink);
+      margin-top: 0.25rem;
+    }
+    .sev-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      display: inline-block;
+    }
+    .sev-1 .sev-dot { background: var(--severity-1); }
+    .sev-2 .sev-dot { background: var(--severity-2); }
+    .sev-3 .sev-dot { background: var(--severity-3); }
+    .sev-4 .sev-dot { background: var(--severity-4); }
+    .sev-text { font-size: 0.82rem; color: var(--ink-3); margin-top: 0.25rem; }
+
+    /* Flow steps */
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } }
+    .flow-step {
+      padding: 1rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .flow-step-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .flow-step-name {
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+    .flow-step-meta {
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      line-height: 1.45;
+    }
+    .flow-step-issues {
+      margin-top: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+
+    /* Heuristic chips */
+    .h-chips {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .h-chip {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 9999px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Heuristic list (Nielsen 10) */
+    .heuristics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .heuristics { grid-template-columns: 1fr; } }
+    .h-row {
+      padding: 0.85rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      display: flex;
+      gap: 0.85rem;
+      align-items: baseline;
+      font-size: 0.88rem;
+    }
+    .h-row-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .h-row-name { color: var(--ink); }
+
+    /* Issue card */
+    .issue {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1rem 0;
+      background: var(--bg);
+    }
+    .issue-head {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg-2);
+      flex-wrap: wrap;
+    }
+    .issue-num {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+    }
+    .issue-title {
+      font-size: 1rem; font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      flex: 1; min-width: 200px;
+    }
+    .issue-sev {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .issue-sev[data-sev="1"] { background: var(--severity-1); }
+    .issue-sev[data-sev="2"] { background: var(--severity-2); }
+    .issue-sev[data-sev="3"] { background: var(--severity-3); }
+    .issue-sev[data-sev="4"] { background: var(--severity-4); }
+
+    .issue-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    @media (max-width: 720px) { .issue-body { grid-template-columns: 1fr; } }
+    .issue-img-wrap {
+      padding: 1.25rem;
+      background: var(--bg-2);
+      border-right: 1px solid var(--rule);
+      display: flex; align-items: center; justify-content: center;
+    }
+    @media (max-width: 720px) {
+      .issue-img-wrap { border-right: none; border-bottom: 1px solid var(--rule); }
+    }
+    .issue-img-wrap img {
+      width: 100%; height: auto;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+    }
+    .issue-text {
+      padding: 1.25rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.85rem;
+    }
+    .issue-block-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.3rem;
+    }
+    .issue-block p {
+      font-size: 0.9rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+      margin: 0;
+    }
+    .issue-recommend {
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      padding: 0.85rem 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .issue-recommend p { color: var(--ink); }
+
+    /* Placeholder */
+    .placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          var(--bg-2),
+          var(--bg-2) 10px,
+          var(--bg-3) 10px,
+          var(--bg-3) 20px
+        );
+      border: 1px dashed var(--rule-strong);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    /* Priority matrix (severity x frequency) */
+    .matrix-wrap {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+      background: var(--bg);
+    }
+    .matrix-head {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .matrix-table {
+      display: grid;
+      grid-template-columns: 80px repeat(4, 1fr);
+      gap: 2px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+    .matrix-cell {
+      padding: 0.85rem 0.6rem;
+      background: var(--bg);
+      font-size: 0.8rem;
+      min-height: 80px;
+    }
+    .matrix-cell-head {
+      background: var(--bg-2);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: auto;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .matrix-issue-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.15rem 0.45rem;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      margin: 0.15rem;
+      color: var(--ink-2);
+    }
+    .matrix-issue-tag[data-sev="3"] { background: #fbe7da; border-color: #f1c5a4; color: #8c4515; }
+    .matrix-issue-tag[data-sev="4"] { background: #fad9d9; border-color: #ecaeae; color: #7a2727; }
+
+    /* Recommendations */
+    .recs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 720px) { .recs { grid-template-columns: 1fr; } }
+    .rec {
+      padding: 1.25rem;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+    .rec-priority {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .rec h4 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .rec p {
+      font-size: 0.85rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* Takeaways */
+    .takeaways {
+      list-style: none;
+      display: flex; flex-direction: column;
+      counter-reset: tk;
+      margin: 1rem 0;
+    }
+    .takeaways li {
+      counter-increment: tk;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 0.75rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.95rem;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+    .takeaways li:last-child { border-bottom: none; }
+    .takeaways li::before {
+      content: counter(tk, decimal-leading-zero);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      padding-top: 1px;
+    }
+
+    /* CTA */
+    .cta-row { display: flex; gap: 0.75rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.1rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem; font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: background 150ms, color 150ms, border-color 150ms;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--ink); color: var(--bg); }
+    .btn-primary:hover { background: var(--ink-2); }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+    .btn-secondary:hover { background: var(--bg-2); }
+
+    /* Bottom navigation */
+    .bottom-nav {
+      max-width: var(--wide-max);
+      margin: 4rem auto 0;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .bottom-nav-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9rem; color: var(--ink-2);
+      padding: 0.5rem 0;
+      transition: color 150ms;
+    }
+    .bottom-nav-link:hover { color: var(--ink); }
+
+    .footer {
+      max-width: var(--wide-max);
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem;
+      color: var(--ink-3);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-links { display: flex; gap: 1.25rem; }
+    .footer-links a:hover { color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .topbar { padding: 0.75rem 1.25rem; }
+      .hero { padding: 3rem 1.25rem 2rem; }
+      .cover-wrap, .layout, .bottom-nav, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="v1-polished.html" class="topbar-brand">Katie Lei</a>
+      <span class="topbar-crumb">
+        <a href="v1-polished.html#work" class="topbar-link" style="padding:0">Work</a>
+        <span class="topbar-crumb-sep">/</span>
+        <span class="topbar-crumb-current">Presto Heuristic Evaluation</span>
+      </span>
+    </div>
+    <div class="topbar-right">
+      <a href="v1-polished.html#contact" class="topbar-link">Contact</a>
+      <a href="volleyball-branding-case-study-v2.html" class="topbar-cta">Next case study →</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Case study · Heuristic evaluation
+    </span>
+    <h1 class="hero-title">A heuristic evaluation of Presto's Add Funds flow.</h1>
+    <p class="hero-subtitle">An expert review of prestocard.ca's highest-frequency, highest-stakes task — top up a transit card — assessed against Nielsen's 10 usability heuristics, with prioritized recommendations.</p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Method</span>
+        <span class="hero-meta-value">Heuristic Evaluation</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Framework</span>
+        <span class="hero-meta-value">Nielsen's 10 Heuristics</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Scope</span>
+        <span class="hero-meta-value">Add Funds to Card flow</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Tools</span>
+        <span class="hero-meta-value">Figma, FigJam</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cover -->
+  <div class="cover-wrap">
+    <div class="placeholder" style="aspect-ratio: 16/9;">Cover · prestocard.ca add-funds flow</div>
+  </div>
+
+  <!-- Layout -->
+  <div class="layout">
+
+    <aside class="toc" aria-label="Contents">
+      <p class="toc-label">Contents</p>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#summary" class="is-active">Summary</a></li>
+        <li><a href="#why">Why this flow</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#heuristics">Heuristics</a></li>
+        <li><a href="#flow">The flow</a></li>
+        <li><a href="#findings">Findings</a></li>
+        <li><a href="#priority">Priority matrix</a></li>
+        <li><a href="#recommendations">Recommendations</a></li>
+        <li><a href="#reflection">Reflection</a></li>
+      </ul>
+    </aside>
+
+    <article class="content">
+
+      <!-- Summary -->
+      <section class="section" id="summary">
+        <div class="section-meta">
+          <span class="section-num">01</span>
+          <span class="section-pill">Summary</span>
+        </div>
+        <h2>At a glance</h2>
+        <p>Presto is the regional transit fare card used across the GTHA. The Add Funds flow on prestocard.ca is a textbook high-stakes, high-frequency task — riders top up specifically because they need to ride <em>now</em>. I evaluated the end-to-end flow against Nielsen's 10 heuristics to find where the experience fails users under time pressure, and where small fixes would meaningfully reduce anxiety.</p>
+
+        <div class="summary">
+          <div class="summary-cell">
+            <p class="summary-label">Subject</p>
+            <p class="summary-text">prestocard.ca · Add Funds to a registered card</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Method</p>
+            <p class="summary-text">Heuristic evaluation against Nielsen's 10 + severity rating.</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Issues found</p>
+            <p class="summary-text"><em>[X]</em> total · <em>[Y]</em> rated major or catastrophic.</p>
+          </div>
+          <div class="summary-cell">
+            <p class="summary-label">Top finding</p>
+            <p class="summary-text">"Funds may take up to 24 hours" warning — a significant feedback / system-status failure on a time-sensitive task.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why this flow -->
+      <section class="section" id="why">
+        <div class="section-meta">
+          <span class="section-num">02</span>
+          <span class="section-pill">Why this flow</span>
+        </div>
+        <h2>The right flow to evaluate.</h2>
+        <p>The Add Funds flow is the most consequential task on prestocard.ca. Users almost never come to the site to browse — they arrive with intent: <strong>my card is empty, I need to top up before tomorrow morning.</strong> That makes it the right scope for a heuristic evaluation: high traffic, high anxiety, and bounded enough to redesign within a portfolio timeline.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-num">#1</div>
+            <div class="stat-label">Highest-frequency task on the site</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">⏱</div>
+            <div class="stat-label">Done under time pressure</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">$</div>
+            <div class="stat-label">Real money &amp; trust at stake</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">24h</div>
+            <div class="stat-label">Stated worst-case load delay</div>
+          </div>
+        </div>
+
+        <h3>Why it's worth fixing</h3>
+        <ul class="takeaways">
+          <li>Failure here doesn't just frustrate — it strands riders mid-commute.</li>
+          <li>The flow combines login, account state, payment, and a hardware-side confirmation — every category of usability concern in one task.</li>
+          <li>The site itself flags a 24-hour delay, which immediately surfaces an expectation-mismatch problem worth investigating.</li>
+        </ul>
+      </section>
+
+      <!-- Method -->
+      <section class="section" id="method">
+        <div class="section-meta">
+          <span class="section-num">03</span>
+          <span class="section-pill">Method</span>
+        </div>
+        <h2>Approach.</h2>
+        <p>I walked through the Add Funds task end-to-end as a registered user on desktop, capturing each screen and noting violations against the 10 heuristics. Each issue was logged with a screenshot, the affected heuristic(s), a rationale, and a severity rating using Nielsen's 0–4 scale.</p>
+
+        <h3>Severity ratings</h3>
+        <div class="severity-legend">
+          <div class="sev sev-1">
+            <div class="sev-num">Severity 1</div>
+            <div class="sev-label"><span class="sev-dot"></span>Cosmetic</div>
+            <div class="sev-text">Fix when convenient.</div>
+          </div>
+          <div class="sev sev-2">
+            <div class="sev-num">Severity 2</div>
+            <div class="sev-label"><span class="sev-dot"></span>Minor</div>
+            <div class="sev-text">Low priority.</div>
+          </div>
+          <div class="sev sev-3">
+            <div class="sev-num">Severity 3</div>
+            <div class="sev-label"><span class="sev-dot"></span>Major</div>
+            <div class="sev-text">High priority — fix before launch.</div>
+          </div>
+          <div class="sev sev-4">
+            <div class="sev-num">Severity 4</div>
+            <div class="sev-label"><span class="sev-dot"></span>Catastrophic</div>
+            <div class="sev-text">Must fix before release.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Heuristics -->
+      <section class="section" id="heuristics">
+        <div class="section-meta">
+          <span class="section-num">04</span>
+          <span class="section-pill">Framework</span>
+        </div>
+        <h2>Nielsen's 10 heuristics.</h2>
+        <p>Each finding is tagged to one or more of Jakob Nielsen's 10 usability heuristics — the standard reference for expert evaluations.</p>
+        <div class="heuristics">
+          <div class="h-row"><span class="h-row-num">H1</span><span class="h-row-name">Visibility of system status</span></div>
+          <div class="h-row"><span class="h-row-num">H2</span><span class="h-row-name">Match between system and real world</span></div>
+          <div class="h-row"><span class="h-row-num">H3</span><span class="h-row-name">User control and freedom</span></div>
+          <div class="h-row"><span class="h-row-num">H4</span><span class="h-row-name">Consistency and standards</span></div>
+          <div class="h-row"><span class="h-row-num">H5</span><span class="h-row-name">Error prevention</span></div>
+          <div class="h-row"><span class="h-row-num">H6</span><span class="h-row-name">Recognition rather than recall</span></div>
+          <div class="h-row"><span class="h-row-num">H7</span><span class="h-row-name">Flexibility and efficiency of use</span></div>
+          <div class="h-row"><span class="h-row-num">H8</span><span class="h-row-name">Aesthetic and minimalist design</span></div>
+          <div class="h-row"><span class="h-row-num">H9</span><span class="h-row-name">Help users recognize, diagnose, recover from errors</span></div>
+          <div class="h-row"><span class="h-row-num">H10</span><span class="h-row-name">Help and documentation</span></div>
+        </div>
+      </section>
+
+      <!-- Flow -->
+      <section class="section" id="flow">
+        <div class="section-meta">
+          <span class="section-num">05</span>
+          <span class="section-pill">The flow</span>
+        </div>
+        <h2>Mapping the task.</h2>
+        <p>Five steps from landing to confirmation. Each step was evaluated independently before issues were consolidated.</p>
+
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-step-num">Step 01</div>
+            <div class="flow-step-name">Sign in</div>
+            <div class="flow-step-meta">Email + password, no SSO option.</div>
+            <div class="flow-step-issues">[N issues]</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">Step 02</div>
+            <div class="flow-step-name">Select card</div>
+            <div class="flow-step-meta">Choose registered card to load.</div>
+            <div class="flow-step-issues">[N issues]</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">Step 03</div>
+            <div class="flow-step-name">Enter amount</div>
+            <div class="flow-step-meta">Pick or type top-up amount.</div>
+            <div class="flow-step-issues">[N issues]</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">Step 04</div>
+            <div class="flow-step-name">Payment</div>
+            <div class="flow-step-meta">Card details / saved payment.</div>
+            <div class="flow-step-issues">[N issues]</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">Step 05</div>
+            <div class="flow-step-name">Confirmation</div>
+            <div class="flow-step-meta">Receipt &amp; "up to 24h" notice.</div>
+            <div class="flow-step-issues">[N issues]</div>
+          </div>
+        </div>
+
+        <div class="placeholder" style="aspect-ratio: 16/9;">Annotated flow diagram</div>
+      </section>
+
+      <!-- Findings -->
+      <section class="section" id="findings">
+        <div class="section-meta">
+          <span class="section-num">06</span>
+          <span class="section-pill">Findings</span>
+        </div>
+        <h2>Issues identified.</h2>
+        <p>Each issue is documented with a screenshot, the affected heuristic, the impact on the user, and a severity rating. Recommendations follow in §08.</p>
+
+        <!-- ISSUE 01 — the headline issue -->
+        <div class="issue">
+          <div class="issue-head">
+            <span class="issue-num">ISSUE 01</span>
+            <span class="issue-title">"Funds may take up to 24 hours to appear" with no progress visibility</span>
+            <span class="issue-sev" data-sev="4">Sev 4 · Catastrophic</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-img-wrap">
+              <div class="placeholder" style="aspect-ratio: 4/3;">Confirmation screen screenshot</div>
+            </div>
+            <div class="issue-text">
+              <div class="h-chips">
+                <span class="h-chip">H1 · Status</span>
+                <span class="h-chip">H2 · Real world</span>
+                <span class="h-chip">H9 · Recover</span>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Observation</p>
+                <p>After paying, users are told the load may take up to 24 hours to appear on the card. There's no live status, no progress indicator, no "ready by" estimate, and no way to verify the load completed before tapping at a gate.</p>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Why it matters</p>
+                <p>Users come here under time pressure. A 24-hour worst case combined with no feedback turns a paid transaction into an open question — and a possible failed gate the next morning.</p>
+              </div>
+              <div class="issue-recommend">
+                <p class="issue-block-label">Recommendation</p>
+                <p>Show typical fulfillment time prominently before payment ("Usually ready in ~10 min, up to 24h"). Send confirmation when funds are tap-ready. Provide a status check on the account page.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ISSUE 02 — placeholder -->
+        <div class="issue">
+          <div class="issue-head">
+            <span class="issue-num">ISSUE 02</span>
+            <span class="issue-title">[Issue title — short, descriptive]</span>
+            <span class="issue-sev" data-sev="3">Sev 3 · Major</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-img-wrap">
+              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+            </div>
+            <div class="issue-text">
+              <div class="h-chips">
+                <span class="h-chip">H? · [Heuristic]</span>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Observation</p>
+                <p><em>[What did you see? Be specific about the screen and behavior.]</em></p>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Why it matters</p>
+                <p><em>[Impact on the user — what they can't do, get wrong, or worry about.]</em></p>
+              </div>
+              <div class="issue-recommend">
+                <p class="issue-block-label">Recommendation</p>
+                <p><em>[Concrete fix — describe the change, not the heuristic.]</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ISSUE 03 -->
+        <div class="issue">
+          <div class="issue-head">
+            <span class="issue-num">ISSUE 03</span>
+            <span class="issue-title">[Issue title]</span>
+            <span class="issue-sev" data-sev="3">Sev 3 · Major</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-img-wrap">
+              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+            </div>
+            <div class="issue-text">
+              <div class="h-chips">
+                <span class="h-chip">H? · [Heuristic]</span>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Observation</p>
+                <p><em>[…]</em></p>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Why it matters</p>
+                <p><em>[…]</em></p>
+              </div>
+              <div class="issue-recommend">
+                <p class="issue-block-label">Recommendation</p>
+                <p><em>[…]</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ISSUE 04 -->
+        <div class="issue">
+          <div class="issue-head">
+            <span class="issue-num">ISSUE 04</span>
+            <span class="issue-title">[Issue title]</span>
+            <span class="issue-sev" data-sev="2">Sev 2 · Minor</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-img-wrap">
+              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+            </div>
+            <div class="issue-text">
+              <div class="h-chips">
+                <span class="h-chip">H? · [Heuristic]</span>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Observation</p>
+                <p><em>[…]</em></p>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Why it matters</p>
+                <p><em>[…]</em></p>
+              </div>
+              <div class="issue-recommend">
+                <p class="issue-block-label">Recommendation</p>
+                <p><em>[…]</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ISSUE 05 -->
+        <div class="issue">
+          <div class="issue-head">
+            <span class="issue-num">ISSUE 05</span>
+            <span class="issue-title">[Issue title]</span>
+            <span class="issue-sev" data-sev="1">Sev 1 · Cosmetic</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-img-wrap">
+              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+            </div>
+            <div class="issue-text">
+              <div class="h-chips">
+                <span class="h-chip">H? · [Heuristic]</span>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Observation</p>
+                <p><em>[…]</em></p>
+              </div>
+              <div class="issue-block">
+                <p class="issue-block-label">Why it matters</p>
+                <p><em>[…]</em></p>
+              </div>
+              <div class="issue-recommend">
+                <p class="issue-block-label">Recommendation</p>
+                <p><em>[…]</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Priority matrix -->
+      <section class="section" id="priority">
+        <div class="section-meta">
+          <span class="section-num">07</span>
+          <span class="section-pill">Priority</span>
+        </div>
+        <h2>Where to fix first.</h2>
+        <p>Issues plotted by severity (rows) and step in the flow (columns) — making it easy to see where in the journey users hit the heaviest friction.</p>
+
+        <div class="matrix-wrap">
+          <div class="matrix-head">
+            <span>Severity × Step</span>
+            <span>Drag to reposition issue tags</span>
+          </div>
+          <div class="matrix-table">
+            <div class="matrix-cell matrix-cell-head"></div>
+            <div class="matrix-cell matrix-cell-head">Sign in</div>
+            <div class="matrix-cell matrix-cell-head">Select card</div>
+            <div class="matrix-cell matrix-cell-head">Amount + pay</div>
+            <div class="matrix-cell matrix-cell-head">Confirmation</div>
+
+            <div class="matrix-cell matrix-cell-head">Sev 4</div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="4">#01 24h delay</span></div>
+
+            <div class="matrix-cell matrix-cell-head">Sev 3</div>
+            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="3">#02</span></div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="3">#03</span></div>
+            <div class="matrix-cell"></div>
+
+            <div class="matrix-cell matrix-cell-head">Sev 2</div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag">#04</span></div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"></div>
+
+            <div class="matrix-cell matrix-cell-head">Sev 1</div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag">#05</span></div>
+            <div class="matrix-cell"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recommendations -->
+      <section class="section" id="recommendations">
+        <div class="section-meta">
+          <span class="section-num">08</span>
+          <span class="section-pill">Recommendations</span>
+        </div>
+        <h2>Top fixes.</h2>
+        <p>The three recommendations that would have the biggest impact on user trust and time-to-success in this flow.</p>
+
+        <div class="recs">
+          <div class="rec">
+            <div class="rec-priority">PRIORITY 01</div>
+            <h4>Make fulfillment time visible &amp; verifiable</h4>
+            <p>Surface typical processing time before payment, send a "ready to tap" notification, and add a status indicator on the account page so users never tap a gate guessing whether the load went through.</p>
+          </div>
+          <div class="rec">
+            <div class="rec-priority">PRIORITY 02</div>
+            <h4>[Recommendation 2]</h4>
+            <p><em>[Tied to a Sev 3 issue. Describe the change in product terms — what users see and do differently afterward.]</em></p>
+          </div>
+          <div class="rec">
+            <div class="rec-priority">PRIORITY 03</div>
+            <h4>[Recommendation 3]</h4>
+            <p><em>[A high-leverage smaller fix — perhaps consistency or recognition-vs-recall.]</em></p>
+          </div>
+        </div>
+
+        <h3>Proposed redesign (optional)</h3>
+        <p><em>[If you mock up a redesigned confirmation screen with proper system status, drop it in here.]</em></p>
+        <div class="placeholder" style="aspect-ratio: 16/9;">Redesigned confirmation screen mock</div>
+      </section>
+
+      <!-- Reflection -->
+      <section class="section" id="reflection">
+        <div class="section-meta">
+          <span class="section-num">09</span>
+          <span class="section-pill">Reflection</span>
+        </div>
+        <h2>What I learned.</h2>
+        <p><strong>Pick a flow with stakes.</strong> The Add Funds flow surfaced richer issues than a browse-only task because real money, real time pressure, and a hardware confirmation step compound every small UX failure.</p>
+        <p><strong>Heuristics are a vocabulary, not a verdict.</strong> Tagging issues to H1 / H2 / H9 helps communicate <em>why</em> something feels broken — but the value is in the specific recommendation, not in the heuristic name.</p>
+        <p><strong>If I had more time…</strong> I'd validate severity ratings with a second evaluator and run a small unmoderated test on the confirmation screen redesign.</p>
+
+        <div class="cta-row">
+          <a href="volleyball-branding-case-study-v2.html" class="btn btn-primary">
+            <span>Next case study</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="v1-polished.html#work" class="btn btn-secondary">
+            <span>Back to work</span>
+          </a>
+        </div>
+      </section>
+
+    </article>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Page navigation">
+    <a href="v1-polished.html#work" class="bottom-nav-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All work
+    </a>
+    <a href="volleyball-branding-case-study-v2.html" class="bottom-nav-link">
+      Next case study: Volleyball Branding
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </nav>
+
+  <footer class="footer">
+    <p>© 2026 Katie Lei · Toronto, ON</p>
+    <div class="footer-links">
+      <a href="mailto:katie.sinlei@gmail.com">Email</a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#" target="_blank" rel="noopener">Dribbble</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var bar = document.getElementById('progress');
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement;
+        var scrolled = h.scrollTop || document.body.scrollTop;
+        var max = h.scrollHeight - h.clientHeight;
+        bar.style.width = max > 0 ? (scrolled / max * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+
+    (function() {
+      var sections = document.querySelectorAll('.section[id]');
+      var links = document.querySelectorAll('#tocList a');
+      if (!('IntersectionObserver' in window)) return;
+      var byId = {};
+      links.forEach(function(a) {
+        var id = a.getAttribute('href').replace('#','');
+        byId[id] = a;
+      });
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            links.forEach(function(a) { a.classList.remove('is-active'); });
+            var a = byId[e.target.id];
+            if (a) a.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+      sections.forEach(function(s) { io.observe(s); });
+    })();
+  </script>
+
+</body>
+</html>
