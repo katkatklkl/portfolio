@@ -23,6 +23,8 @@
 
       --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
       --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+      --font-grizzlies: 'Grizzlies', system-ui, sans-serif;
+      --font-josefin:   'Josefin Sans', system-ui, sans-serif;
 
       --radius-sm:    6px;
       --radius:       10px;
@@ -37,6 +39,21 @@
       --wide-max:     1100px;
 
       --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @font-face {
+      font-family: 'Grizzlies';
+      src: url('images/Orcas/NBA Grizzlies.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Josefin Sans';
+      src: url('images/Orcas/JosefinSans-VariableFont_wght.ttf') format('truetype');
+      font-weight: 100 700;
+      font-style: normal;
+      font-display: swap;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -411,11 +428,10 @@
       border: 1px solid var(--rule);
       border-radius: var(--radius);
       background: var(--bg);
-      padding: 3rem 2rem;
+      padding: 1.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      aspect-ratio: 16/9;
       margin: 1rem 0;
     }
     .logo-block-dark {
@@ -423,9 +439,9 @@
       border-color: var(--ink);
     }
     .logo-block img {
-      max-width: 60%;
-      max-height: 80%;
-      width: auto;
+      max-width: 100%;
+      width: 100%;
+      height: auto;
       object-fit: contain;
     }
 
@@ -554,12 +570,12 @@
       <span class="topbar-crumb">
         <a href="index.html#work" class="topbar-link" style="padding:0">Work</a>
         <span class="topbar-crumb-sep">/</span>
-        <span class="topbar-crumb-current">Volleyball Team Branding</span>
+        <span class="topbar-crumb-current">Orcas</span>
       </span>
     </div>
     <div class="topbar-right">
       <a href="index.html#contact" class="topbar-link">Contact</a>
-      <a href="game-revamp-case-study.html" class="topbar-cta">Next case study →</a>
+      <a href="bakebasket-case-study.html" class="topbar-cta">Next case study →</a>
     </div>
   </header>
 
@@ -569,8 +585,8 @@
       <span class="hero-eyebrow-dot"></span>
       Case study · Brand identity
     </span>
-    <h1 class="hero-title">Building the brand identity for a local volleyball team.</h1>
-    <p class="hero-subtitle">An end-to-end brand identity project — from positioning and pillars to logo, color, typography, merchandise, and team jerseys. Calm, direct, hungry.</p>
+    <h1 class="hero-title">Building the brand identity for a volleyball organization.</h1>
+    <p class="hero-subtitle">Orcas is a volleyball organization that runs competitive teams, volleyball runs, and tournaments. They needed a brand that could work across all of it: jerseys, merch, event advertising, and social media.</p>
 
     <div class="hero-meta">
       <div class="hero-meta-item">
@@ -579,22 +595,22 @@
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Scope</span>
-        <span class="hero-meta-value">Identity, Merch, Jerseys</span>
+        <span class="hero-meta-value">Product Design · Brand Identity · Merch</span>
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Client</span>
-        <span class="hero-meta-value">Local volleyball team</span>
+        <span class="hero-meta-value">Orcas</span>
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Tools</span>
-        <span class="hero-meta-value">Illustrator, Photoshop</span>
+        <span class="hero-meta-value">Illustrator, Photoshop, Figma</span>
       </div>
     </div>
   </section>
 
   <!-- Cover -->
   <div class="cover-wrap">
-    <div class="placeholder" style="aspect-ratio: 4/3;">Cover image · 4:3</div>
+    <img src="images/Orcas/logo.png" alt="Orcas brand identity cover" class="cover" />
   </div>
 
   <!-- Layout -->
@@ -606,10 +622,9 @@
         <li><a href="#summary" class="is-active">Summary</a></li>
         <li><a href="#context">Context</a></li>
         <li><a href="#pillars">Brand pillars</a></li>
-        <li><a href="#logo">Logo</a></li>
         <li><a href="#color">Color palette</a></li>
         <li><a href="#typography">Typography</a></li>
-        <li><a href="#merch">Merchandise</a></li>
+        <li><a href="#logo">Logo</a></li>
         <li><a href="#jerseys">Jerseys</a></li>
         <li><a href="#reflection">Reflection</a></li>
       </ul>
@@ -624,24 +639,24 @@
           <span class="section-pill">Summary</span>
         </div>
         <h2>At a glance</h2>
-        <p>A local volleyball team needed a brand identity that matched how they actually play and carry themselves on court — calm, direct, and hungry. I built the identity from the ground up: positioning, logo, color, typography, and the applied design system across merchandise and team jerseys.</p>
+        <p>Orcas is a volleyball organization running competitive teams, volleyball runs, and open tournaments. They had no consistent visual identity, nothing that could tie a team jersey to a tournament poster to an Instagram story. I built the brand from the ground up: positioning, logo, color, typography, and a system applied across merchandise, jerseys, and event materials.</p>
 
         <div class="summary">
           <div class="summary-cell">
             <p class="summary-label">Goal</p>
-            <p class="summary-text">A cohesive identity that scales from a court bench to a hoodie to a printed jersey.</p>
+            <p class="summary-text">A cohesive identity that works across teams, events, merch, and social media, not just on court.</p>
           </div>
           <div class="summary-cell">
             <p class="summary-label">Approach</p>
-            <p class="summary-text">Pillars first, visuals second — every design decision laddering back to "calm, direct, hungry."</p>
+            <p class="summary-text">Pillars first, visuals second. Every design decision laddering back to "calm, direct, hungry."</p>
           </div>
           <div class="summary-cell">
             <p class="summary-label">Deliverables</p>
-            <p class="summary-text">Logo system, color palette, type system, merch designs, jersey designs.</p>
+            <p class="summary-text">Logo system, color palette, type system, and jersey design. The team applied the brand to their social media pages, advertisements and merch from there.</p>
           </div>
           <div class="summary-cell">
             <p class="summary-label">Outcome</p>
-            <p class="summary-text">A brand the team can wear, post, and play in — consistent across every touchpoint.</p>
+            <p class="summary-text">A brand Orcas can wear, post, and advertise with, consistent whether it's a tournament banner or a team hoodie.</p>
           </div>
         </div>
       </section>
@@ -653,8 +668,8 @@
           <span class="section-pill">Context</span>
         </div>
         <h2>Starting with who they actually are.</h2>
-        <p><em>[Add context about the team here — when you started working with them, where they play, what stage they were at, and what brought them to ask for branding help.]</em></p>
-        <p><em>[Add a short paragraph on the brief — what they asked for, what they didn't have, and why "DIY brand" wasn't going to scale with them.]</em></p>
+        <p>Orcas is more than a volleyball team. They run competitive teams across different levels, organize volleyball runs for the wider community, and host tournaments that bring players and spectators together. With activity happening across all three, they needed a brand that could represent all of it coherently: on a jersey, a tournament flyer, a social post, and a merch drop.</p>
+        <p>When they came to me, they had a name and a vision but no visual identity. No logo, no defined colors, no consistent way to show up anywhere. The challenge wasn't just designing something that looked good. It was building a system flexible enough to serve a competitive team and a public-facing organization at the same time.</p>
       </section>
 
       <!-- Brand pillars -->
@@ -663,178 +678,113 @@
           <span class="section-num">03</span>
           <span class="section-pill">Brand pillars</span>
         </div>
-        <h2>Calm. Direct. Hungry.</h2>
-        <p>Three words, chosen deliberately, that every visual decision had to honor. They captured how the team plays — composed under pressure, no wasted movement, always looking for the next point.</p>
+        <h2>Defining the brand identity.</h2>
+        <p>Before touching any visuals, I established three brand pillars to guide the work: <strong>Calm. Direct. Hungry.</strong> Having these defined early meant every design decision had a clear reference point. If something didn't ladder back to at least one of the three, it didn't make the cut.</p>
+        <p>I also gathered supporting keywords during the brainstorm: <strong>disciplined, confident, sharp, playful.</strong> These helped define the full range of the identity, giving me guardrails on both ends so the brand wouldn't tip too rigid or too casual.</p>
+        <p>To ground all of this visually, I built a moodboard. The brand needed to feel composed without feeling passive, and athletic without feeling loud. The name Orcas helped anchor that direction: an animal associated with stillness, precision, and quiet intensity. The moodboard became the reference I kept returning to when making decisions about color, type, and form.</p>
 
-        <div class="pillars">
-          <div class="pillar">
-            <div class="pillar-label">Pillar 01</div>
-            <div class="pillar-name">Calm</div>
-            <p class="pillar-text"><em>[How does this show up visually? e.g. neutral base, generous space, restrained type.]</em></p>
+        <img src="images/Orcas/moodboard.png" alt="Orcas brand moodboard" class="img-full zoomable" style="border-radius: var(--radius); margin-top: 1.5rem; display:block; width:100%;" />
+
+      </section>
+
+      <!-- Color -->
+      <section class="section" id="color">
+        <div class="section-meta">
+          <span class="section-num">04</span>
+          <span class="section-pill">Color</span>
+        </div>
+        <h2>Color palette.</h2>
+        <p>Coming out of the moodboard, a color direction started to form. The imagery that resonated most was high-contrast and stripped back: dark backgrounds, clean whites, very little noise. That pushed me toward keeping the palette simple.</p>
+        <p>The orca itself was the most natural starting point. The animal is essentially monochrome: black, white, and grey. Building the palette around that felt right for the brand. It was grounded, distinctive, and didn't need to fight for attention. From there, I added the blue color as an accent to create some contrast while the monochrome base keeps everything else from competing with it.</p>
+
+        <img src="images/Orcas/color palette.png" alt="Orcas color palette" class="img-full zoomable" style="margin-top: 1rem;" />
+      </section>
+
+      <!-- Typography -->
+      <section class="section" id="typography">
+        <div class="section-meta">
+          <span class="section-num">05</span>
+          <span class="section-pill">Typography</span>
+        </div>
+        <h2>Type system.</h2>
+        <p>I chose two typefaces with clearly defined roles. Grizzlies is used for anything that needs visual weight: headlines, jersey graphics, score displays. It only ever appears in uppercase, which keeps it from being overused. Josefin Sans handles body copy, captions, and labels. It's geometric enough to feel intentional but readable enough to not get in the way.</p>
+        <p>Defining clear roles for each typeface early on meant I had a consistent rule to apply across every touchpoint, rather than making decisions case by case.</p>
+
+        <div class="type-spec">
+          <div class="type-spec-label">Display · Headlines · Jersey graphics · Scores</div>
+          <div class="type-spec-name" style="font-family: var(--font-grizzlies); font-size: 3rem; letter-spacing: 0.02em;">ORC<span style="color:#1E7CE8;">A</span>S</div>
+          <div class="type-spec-name" style="font-family: var(--font-grizzlies); font-size: 1.75rem; font-weight: 400; letter-spacing: 0.06em; margin-top: 0.5rem;">0 1 2 3 4 5 6 7 8 9</div>
+          <div class="type-spec-meta">Grizzlies · Always uppercase · Headlines, jersey text, score displays, section starters</div>
+        </div>
+        <div class="type-spec">
+          <div class="type-spec-label">Body · Captions · Labels</div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 0.5rem;">
+            <div>
+              <div style="font-family: var(--font-josefin); font-weight: 300; font-size: 3rem; line-height: 1; color: var(--ink);">Aa</div>
+              <div style="font-family: var(--font-josefin); font-weight: 300; font-size: 0.82rem; color: var(--ink-3); margin-top: 0.5rem;">300 — Light</div>
+            </div>
+            <div>
+              <div style="font-family: var(--font-josefin); font-weight: 400; font-size: 3rem; line-height: 1; color: var(--ink);">Aa</div>
+              <div style="font-family: var(--font-josefin); font-weight: 400; font-size: 0.82rem; color: var(--ink-3); margin-top: 0.5rem;">400 — Regular</div>
+            </div>
+            <div>
+              <div style="font-family: var(--font-josefin); font-weight: 600; font-size: 3rem; line-height: 1; color: var(--ink);">Aa</div>
+              <div style="font-family: var(--font-josefin); font-weight: 600; font-size: 0.82rem; color: var(--ink-3); margin-top: 0.5rem;">600 — Semibold</div>
+            </div>
           </div>
-          <div class="pillar">
-            <div class="pillar-label">Pillar 02</div>
-            <div class="pillar-name">Direct</div>
-            <p class="pillar-text"><em>[How does this show up visually? e.g. simple wordmark, no decoration, clear hierarchy.]</em></p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-label">Pillar 03</div>
-            <div class="pillar-name">Hungry</div>
-            <p class="pillar-text"><em>[How does this show up visually? e.g. saturated accent, sharp angles, confident weight.]</em></p>
-          </div>
+          <div class="type-spec-meta" style="margin-top: 1.25rem;">Josefin Sans · Body copy, captions, UI labels</div>
         </div>
       </section>
 
       <!-- Logo -->
       <section class="section" id="logo">
         <div class="section-meta">
-          <span class="section-num">04</span>
+          <span class="section-num">06</span>
           <span class="section-pill">Logo</span>
         </div>
         <h2>The mark.</h2>
-        <p><em>[Talk through the logo concept — what it's referencing, how it ladders back to the pillars, and why the form works for the team.]</em></p>
+        <p>My approach was to identify the three things that needed to come through: the animal, the sport, and a sense of movement. From there, I built a circular badge that fuses all three. The orca anchors the identity, the volleyball grounds it in the sport, and the wave adds energy without adding noise. The enclosing ring holds everything together and nods to the idea of a pod. The goal was a mark that could sit on a jersey, a tournament banner, or a social profile and read correctly in all three contexts.</p>
 
         <div class="logo-block">
-          <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase;">Primary logo</div>
+          <img src="images/Orcas/Primary logo.png" alt="Orcas primary logo" class="zoomable" style="width:100%; display:block;" />
         </div>
-        <div class="logo-block logo-block-dark">
-          <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--ink-4); letter-spacing: 0.04em; text-transform: uppercase;">Inverted logo</div>
-        </div>
-
-        <h3>Lockups &amp; variations</h3>
-        <p><em>[Drop in any sub-marks, monograms, horizontal lockups, or social avatar variants.]</em></p>
-
-        <div class="img-grid img-grid--3">
-          <div class="placeholder" style="aspect-ratio: 1/1;">Mark</div>
-          <div class="placeholder" style="aspect-ratio: 1/1;">Monogram</div>
-          <div class="placeholder" style="aspect-ratio: 1/1;">Avatar</div>
+        <div style="display:flex; gap:1rem; margin: 1rem 0;">
+          <div class="logo-block logo-block-dark" style="flex:1; margin:0;">
+            <img src="images/Orcas/Secondary logo.png" alt="Orcas secondary logo" class="zoomable" style="width:100%; display:block;" />
+          </div>
+          <div class="logo-block logo-block-dark" style="flex:1; margin:0;">
+            <img src="images/Orcas/submark.png" alt="Orcas submark" class="zoomable" style="width:100%; display:block;" />
+          </div>
         </div>
       </section>
 
-      <!-- Color -->
-      <section class="section" id="color">
-        <div class="section-meta">
-          <span class="section-num">05</span>
-          <span class="section-pill">Color</span>
-        </div>
-        <h2>Color palette.</h2>
-        <p><em>[Explain the palette — anchor color, neutrals, accent, and how each one supports calm / direct / hungry.]</em></p>
-
-        <div class="palette">
-          <div class="swatch">
-            <div class="swatch-color" style="background: #1A1A1A;"></div>
-            <div class="swatch-meta">
-              <div class="swatch-name">Court Black</div>
-              <div class="swatch-hex">#1A1A1A</div>
-            </div>
-          </div>
-          <div class="swatch">
-            <div class="swatch-color" style="background: #FAFAF9; border-bottom: 1px solid var(--rule);"></div>
-            <div class="swatch-meta">
-              <div class="swatch-name">Chalk</div>
-              <div class="swatch-hex">#FAFAF9</div>
-            </div>
-          </div>
-          <div class="swatch">
-            <div class="swatch-color" style="background: #2E6E5E;"></div>
-            <div class="swatch-meta">
-              <div class="swatch-name">Field Green</div>
-              <div class="swatch-hex">#2E6E5E</div>
-            </div>
-          </div>
-          <div class="swatch">
-            <div class="swatch-color" style="background: #E5C26A;"></div>
-            <div class="swatch-meta">
-              <div class="swatch-name">Hungry Gold</div>
-              <div class="swatch-hex">#E5C26A</div>
-            </div>
-          </div>
-        </div>
-        <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-3); margin-top: 0.5rem;"><em>Placeholder swatches — swap with the real palette.</em></p>
-      </section>
-
-      <!-- Typography -->
-      <section class="section" id="typography">
-        <div class="section-meta">
-          <span class="section-num">06</span>
-          <span class="section-pill">Typography</span>
-        </div>
-        <h2>Type system.</h2>
-        <p><em>[Explain the type pairing — what role each typeface plays, why they were chosen, and how they ladder back to the pillars.]</em></p>
-
-        <div class="type-spec">
-          <div class="type-spec-label">Display · Headlines</div>
-          <div class="type-spec-name" style="font-family: var(--font-sans); font-weight: 700;">Aa Bb Cc 1234</div>
-          <div class="type-spec-meta">[Typeface name] · Weights used · Sample purpose</div>
-        </div>
-        <div class="type-spec">
-          <div class="type-spec-label">Body · Reading text</div>
-          <div class="type-spec-name" style="font-family: var(--font-sans); font-weight: 400; font-size: 1.5rem;">The quick brown fox jumps over the lazy dog.</div>
-          <div class="type-spec-meta">[Typeface name] · Weights used · Sample purpose</div>
-        </div>
-        <div class="type-spec">
-          <div class="type-spec-label">Numerals · Jerseys, scoreboards</div>
-          <div class="type-spec-name" style="font-family: var(--font-mono); font-weight: 600;">0 1 2 3 4 5 6 7 8 9</div>
-          <div class="type-spec-meta">[Typeface name] · Weights used · Sample purpose</div>
-        </div>
-      </section>
-
-      <!-- Merch -->
-      <section class="section" id="merch">
-        <div class="section-meta">
-          <span class="section-num">07</span>
-          <span class="section-pill">Merchandise</span>
-        </div>
-        <h2>Applied to merch.</h2>
-        <p><em>[Talk about what merch you designed — t-shirts, hoodies, hats, stickers, water bottles, etc. — and any decisions specific to merch (placement, scale, single-color treatments).]</em></p>
-
-        <div class="img-grid">
-          <div class="placeholder">Merch · Hoodie</div>
-          <div class="placeholder">Merch · T-shirt</div>
-          <div class="placeholder">Merch · Hat</div>
-          <div class="placeholder">Merch · Sticker pack</div>
-        </div>
-      </section>
 
       <!-- Jerseys -->
       <section class="section" id="jerseys">
         <div class="section-meta">
-          <span class="section-num">08</span>
+          <span class="section-num">07</span>
           <span class="section-pill">Jerseys</span>
         </div>
         <h2>The team jerseys.</h2>
-        <p><em>[Talk through the jersey design — home / away kit, number treatment, any constraints from the league or sublimation printing, and how the brand pillars guided the final look.]</em></p>
+        <p>The jersey extended the brand system directly onto the kit. Black base with white side markings referencing orca patterning, the stamp submark on the chest, and Grizzlies for player numbers and names. The libero jersey is a straight inversion to white so the position reads immediately without introducing anything new. Sponsor logos are tiered by importance and laid out accordingly. A faint wave pattern fades in at the bottom, consistent with the water motif used throughout.</p>
 
         <div class="img-grid">
-          <div class="placeholder">Home jersey</div>
-          <div class="placeholder">Away jersey</div>
+          <img src="images/Orcas/ORCAS JERSEY.png" alt="Orcas jersey black" class="zoomable" />
+          <img src="images/Orcas/ORCAS JERSEY White.png" alt="Orcas libero jersey white" class="zoomable" />
         </div>
-
-        <h3>Number &amp; name system</h3>
-        <p><em>[Optional: show how player numbers and names are treated — wordmark on chest, number on back, sleeve callouts, etc.]</em></p>
-        <div class="placeholder" style="aspect-ratio: 16/9;">Jersey detail / number system</div>
       </section>
 
       <!-- Reflection -->
       <section class="section" id="reflection">
         <div class="section-meta">
-          <span class="section-num">09</span>
+          <span class="section-num">08</span>
           <span class="section-pill">Reflection</span>
         </div>
         <h2>What I learned.</h2>
-        <p><em>[Reflection 1 — something that surprised you about working on a sports brand vs. other branding.]</em></p>
-        <p><em>[Reflection 2 — something about working with a real client team rather than a brief you wrote yourself.]</em></p>
-        <p><em>[Reflection 3 — what you'd do differently or what's next for the brand.]</em></p>
+        <p>Branding work pushed me to think about design systems at a different scale than UI work typically requires. In product design, a component needs to work at a few screen sizes. Here, the same mark needed to hold up on a jersey, a phone screen, a tournament banner, and a sticker. That forced a level of simplicity I wouldn't have arrived at otherwise, and it's something I now think about more deliberately in product work too.</p>
+        <p>Starting with the brand pillars before touching any visuals was the most useful thing I did on this project. Having "calm, direct, hungry" as a shared reference made decisions easier to justify and easier to push back on. It also gave the client a framework to evaluate work against, rather than reacting to aesthetics alone. That's a habit I've carried into how I approach design briefs generally.</p>
+        <p>If I were to continue, I'd want to define how the brand extends into digital templates: social post layouts, event pages, score graphics. The system has the bones for it, but those touchpoints were out of scope here. Documenting usage guidelines more formally would also help ensure the brand stays consistent as the organization grows and more people start applying it.</p>
 
-        <div class="cta-row">
-          <a href="game-revamp-case-study.html" class="btn btn-primary">
-            <span>Next case study</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-          <a href="index.html#work" class="btn btn-secondary">
-            <span>Back to work</span>
-          </a>
-        </div>
       </section>
 
     </article>
@@ -845,18 +795,16 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       All work
     </a>
-    <a href="game-revamp-case-study.html" class="bottom-nav-link">
-      Next case study: Electronic Arts
+    <a href="bakebasket-case-study.html" class="bottom-nav-link">
+      Next case study: Bake Basket
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </nav>
 
   <footer class="footer">
-    <p>© 2026 Katie Lei · Toronto, ON</p>
+    <p>© 2026 Katie Lei</p>
     <div class="footer-links">
       <a href="mailto:katie.sinlei@gmail.com">Email</a>
-      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="#" target="_blank" rel="noopener">Dribbble</a>
     </div>
   </footer>
 

@@ -314,7 +314,7 @@
       gap: 0.5rem;
       margin: 1.25rem 0;
     }
-    @media (max-width: 720px) { .severity-legend { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 720px) { .severity-legend { grid-template-columns: repeat(2, 1fr) !important; } }
     .sev {
       padding: 0.85rem 1rem;
       background: var(--bg);
@@ -417,7 +417,15 @@
       gap: 0.85rem;
       align-items: baseline;
       font-size: 0.88rem;
+      opacity: 0.4;
     }
+    .h-row--violated {
+      opacity: 1;
+      background: var(--accent-soft);
+      border-color: oklch(from var(--accent) l c h / 0.25);
+    }
+    .h-row--violated .h-row-num { color: var(--accent); }
+    .h-row--violated .h-row-name { color: var(--ink); font-weight: 500; }
     .h-row-num {
       font-family: var(--font-mono);
       font-size: 0.72rem;
@@ -715,6 +723,268 @@
       .hero { padding: 3rem 1.25rem 2rem; }
       .cover-wrap, .layout, .bottom-nav, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
     }
+
+    /* Redesign change annotations */
+    .redesign-changes {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .redesign-change {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .redesign-change-num {
+      flex-shrink: 0;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.1rem;
+    }
+    .redesign-change strong {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .redesign-change p {
+      font-size: 0.9rem;
+      color: var(--ink-2);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Before / After Slider */
+    .ba-slider {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      cursor: col-resize;
+      user-select: none;
+      touch-action: none;
+    }
+    .ba-slider img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .ba-after {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      width: 50%;
+    }
+    .ba-after img {
+      position: absolute;
+      top: 0; left: 0;
+      width: var(--ba-full-width, 100%); /* set by JS */
+      max-width: none;
+    }
+    .ba-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      background: var(--ink);
+      z-index: 3;
+      pointer-events: none;
+    }
+    .ba-handle::before, .ba-handle::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      background: var(--ink);
+      box-shadow: 0 2px 12px oklch(0 0 0 / 0.3);
+    }
+    .ba-handle::before { top: 50%; transform: translate(-50%, -50%); }
+    .ba-handle::after  { display: none; }
+    .ba-handle-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      pointer-events: none;
+      color: #fff;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      white-space: nowrap;
+    }
+    .ba-label {
+      position: absolute;
+      top: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2rem;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .ba-label-before {
+      left: 0.75rem;
+      background: oklch(0 0 0 / 0.45);
+      color: #fff;
+    }
+    .ba-label-after {
+      right: 0.75rem;
+      background: oklch(from var(--accent) l c h / 0.85);
+      color: #fff;
+    }
+
+    /* Slideshow */
+    .slideshow {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-3);
+      user-select: none;
+    }
+    .slideshow-track {
+      display: flex;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .slideshow-track .slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      cursor: zoom-in;
+    }
+    .slideshow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      border: none;
+      background: oklch(1 0 0 / 0.85);
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px oklch(0 0 0 / 0.15);
+      transition: background 0.15s, opacity 0.15s;
+      z-index: 2;
+    }
+    .slideshow-btn:hover { background: #fff; }
+    .slideshow-btn:disabled { opacity: 0.3; cursor: default; }
+    .slideshow-prev { left: 0.75rem; }
+    .slideshow-next { right: 0.75rem; }
+    .slideshow-dots {
+      position: absolute;
+      bottom: 0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.375rem;
+      z-index: 2;
+    }
+    .slideshow-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      border: none;
+      background: oklch(1 0 0 / 0.45);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .slideshow-dot.is-active {
+      background: #fff;
+      transform: scale(1.25);
+    }
+    .slideshow-counter {
+      position: absolute;
+      top: 0.625rem;
+      right: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #fff;
+      background: oklch(0 0 0 / 0.35);
+      padding: 0.2rem 0.55rem;
+      border-radius: 2rem;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Lightbox */
+    .zoomable {
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+    }
+    .zoomable:hover { opacity: 0.92; }
+
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: oklch(0.1 0.005 240 / 0.9);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      cursor: zoom-out;
+    }
+    .lightbox-overlay.is-open {
+      display: flex;
+    }
+    .lightbox-overlay img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: var(--radius);
+      box-shadow: 0 32px 80px oklch(0 0 0 / 0.5);
+      cursor: default;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      border: none;
+      background: oklch(1 0 0 / 0.12);
+      color: #fff;
+      font-size: 1.125rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .lightbox-close:hover { background: oklch(1 0 0 / 0.22); }
   </style>
 </head>
 <body>
@@ -732,7 +1002,7 @@
     </div>
     <div class="topbar-right">
       <a href="index.html#contact" class="topbar-link">Contact</a>
-      <a href="bakebasket-case-study.html" class="topbar-cta">Next case study →</a>
+      <a href="game-revamp-case-study.html" class="topbar-cta">Next case study →</a>
     </div>
   </header>
 
@@ -743,7 +1013,7 @@
       Case study · Heuristic evaluation
     </span>
     <h1 class="hero-title">A heuristic evaluation of Presto's Add Funds flow.</h1>
-    <p class="hero-subtitle">An expert review of prestocard.ca's highest-frequency, highest-stakes task — top up a transit card — assessed against Nielsen's 10 usability heuristics, with prioritized recommendations.</p>
+    <p class="hero-subtitle">The Add Funds flow is the highest-frequency task on prestocard.ca. I evaluated it against Nielsen's 10 heuristics, identified five issues, and redesigned the pages where friction was highest.</p>
 
     <div class="hero-meta">
       <div class="hero-meta-item">
@@ -760,14 +1030,14 @@
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Tools</span>
-        <span class="hero-meta-value">Figma, FigJam</span>
+        <span class="hero-meta-value">Figma, FigJam, Adobe Suite</span>
       </div>
     </div>
   </section>
 
   <!-- Cover -->
   <div class="cover-wrap">
-    <div class="placeholder" style="aspect-ratio: 16/9;">Cover · prestocard.ca add-funds flow</div>
+    <img src="images/presto/presto.jpg" alt="Presto Add Funds flow" class="cover" />
   </div>
 
   <!-- Layout -->
@@ -783,7 +1053,7 @@
         <li><a href="#flow">The flow</a></li>
         <li><a href="#findings">Findings</a></li>
         <li><a href="#priority">Priority matrix</a></li>
-        <li><a href="#recommendations">Recommendations</a></li>
+        <li><a href="#redesign">Redesign</a></li>
         <li><a href="#reflection">Reflection</a></li>
       </ul>
     </aside>
@@ -797,7 +1067,8 @@
           <span class="section-pill">Summary</span>
         </div>
         <h2>At a glance</h2>
-        <p>Presto is the regional transit fare card used across the GTHA. The Add Funds flow on prestocard.ca is a textbook high-stakes, high-frequency task — riders top up specifically because they need to ride <em>now</em>. I evaluated the end-to-end flow against Nielsen's 10 heuristics to find where the experience fails users under time pressure, and where small fixes would meaningfully reduce anxiety.</p>
+        <p>Presto is the transit fare card for the GTHA. I chose the Add Funds flow because it is the highest-frequency task on the site and the one users perform under real time pressure. Riders top up because they need to ride <em>now</em>, which means friction here has direct, tangible consequences.</p>
+        <p>The flow is mostly well structured and the majority of heuristics are respected. But five issues share a common pattern: <strong>the experience works for a first-time user on a linear path. It breaks down the moment a returning user tries to adjust, correct, or move faster.</strong></p>
 
         <div class="summary">
           <div class="summary-cell">
@@ -810,11 +1081,11 @@
           </div>
           <div class="summary-cell">
             <p class="summary-label">Issues found</p>
-            <p class="summary-text"><em>[X]</em> total · <em>[Y]</em> rated major or catastrophic.</p>
+            <p class="summary-text">5 total. 4 rated major or catastrophic.</p>
           </div>
           <div class="summary-cell">
             <p class="summary-label">Top finding</p>
-            <p class="summary-text">"Funds may take up to 24 hours" warning — a significant feedback / system-status failure on a time-sensitive task.</p>
+            <p class="summary-text">No saved payment methods. Every reload forces full card re-entry on a registered account.</p>
           </div>
         </div>
       </section>
@@ -826,7 +1097,7 @@
           <span class="section-pill">Why this flow</span>
         </div>
         <h2>The right flow to evaluate.</h2>
-        <p>The Add Funds flow is the most consequential task on prestocard.ca. Users almost never come to the site to browse — they arrive with intent: <strong>my card is empty, I need to top up before tomorrow morning.</strong> That makes it the right scope for a heuristic evaluation: high traffic, high anxiety, and bounded enough to redesign within a portfolio timeline.</p>
+        <p>The Add Funds flow is the most consequential task on prestocard.ca. Users don't visit to browse. They arrive with a specific goal: <strong>my card is low and I need to top up before my commute.</strong> That focus makes it the right scope for a heuristic evaluation: high traffic, real stakes, and narrow enough to produce actionable findings.</p>
 
         <div class="stats">
           <div class="stat">
@@ -842,16 +1113,16 @@
             <div class="stat-label">Real money &amp; trust at stake</div>
           </div>
           <div class="stat">
-            <div class="stat-num">24h</div>
-            <div class="stat-label">Stated worst-case load delay</div>
+            <div class="stat-num">5</div>
+            <div class="stat-label">Usability issues identified</div>
           </div>
         </div>
 
         <h3>Why it's worth fixing</h3>
         <ul class="takeaways">
-          <li>Failure here doesn't just frustrate — it strands riders mid-commute.</li>
-          <li>The flow combines login, account state, payment, and a hardware-side confirmation — every category of usability concern in one task.</li>
-          <li>The site itself flags a 24-hour delay, which immediately surfaces an expectation-mismatch problem worth investigating.</li>
+          <li>Failure here doesn't just frustrate. Users who hit friction may abandon the flow and pay cash at a station kiosk instead, pushing them off the digital channel entirely.</li>
+          <li>The flow spans login, account management, and payment entry, meaning a single task cuts across multiple categories of usability concern.</li>
+          <li>Because this is a recurring task for the same users, small friction compounds in a way it wouldn't on a one-off interaction.</li>
         </ul>
       </section>
 
@@ -862,29 +1133,34 @@
           <span class="section-pill">Method</span>
         </div>
         <h2>Approach.</h2>
-        <p>I walked through the Add Funds task end-to-end as a registered user on desktop, capturing each screen and noting violations against the 10 heuristics. Each issue was logged with a screenshot, the affected heuristic(s), a rationale, and a severity rating using Nielsen's 0–4 scale.</p>
+        <p>I walked the Add Funds task end to end as a registered user on desktop, capturing each screen and logging violations against the 10 heuristics. Each issue was documented with a screenshot, the affected heuristic, a description of the impact on the user, and a severity rating using Nielsen's 0 to 4 scale.</p>
 
         <h3>Severity ratings</h3>
-        <div class="severity-legend">
+        <div class="severity-legend" style="grid-template-columns: repeat(5, 1fr);">
+          <div class="sev sev-0">
+            <div class="sev-num">Severity 0</div>
+            <div class="sev-label"><span class="sev-dot" style="background: var(--ink-4);"></span>No issue</div>
+            <div class="sev-text">Not a usability problem.</div>
+          </div>
           <div class="sev sev-1">
             <div class="sev-num">Severity 1</div>
             <div class="sev-label"><span class="sev-dot"></span>Cosmetic</div>
-            <div class="sev-text">Fix when convenient.</div>
+            <div class="sev-text">Low impact, address last.</div>
           </div>
           <div class="sev sev-2">
             <div class="sev-num">Severity 2</div>
             <div class="sev-label"><span class="sev-dot"></span>Minor</div>
-            <div class="sev-text">Low priority.</div>
+            <div class="sev-text">Worth fixing, not urgent.</div>
           </div>
           <div class="sev sev-3">
             <div class="sev-num">Severity 3</div>
             <div class="sev-label"><span class="sev-dot"></span>Major</div>
-            <div class="sev-text">High priority — fix before launch.</div>
+            <div class="sev-text">Significant user impact, high priority.</div>
           </div>
           <div class="sev sev-4">
             <div class="sev-num">Severity 4</div>
             <div class="sev-label"><span class="sev-dot"></span>Catastrophic</div>
-            <div class="sev-text">Must fix before release.</div>
+            <div class="sev-text">Blocks or seriously harms the user experience.</div>
           </div>
         </div>
       </section>
@@ -896,15 +1172,15 @@
           <span class="section-pill">Framework</span>
         </div>
         <h2>Nielsen's 10 heuristics.</h2>
-        <p>Each finding is tagged to one or more of Jakob Nielsen's 10 usability heuristics — the standard reference for expert evaluations.</p>
+        <p>Each finding maps to one or more of Jakob Nielsen's 10 usability heuristics. Highlighted rows were violated in this evaluation.</p>
         <div class="heuristics">
-          <div class="h-row"><span class="h-row-num">H1</span><span class="h-row-name">Visibility of system status</span></div>
-          <div class="h-row"><span class="h-row-num">H2</span><span class="h-row-name">Match between system and real world</span></div>
-          <div class="h-row"><span class="h-row-num">H3</span><span class="h-row-name">User control and freedom</span></div>
-          <div class="h-row"><span class="h-row-num">H4</span><span class="h-row-name">Consistency and standards</span></div>
-          <div class="h-row"><span class="h-row-num">H5</span><span class="h-row-name">Error prevention</span></div>
-          <div class="h-row"><span class="h-row-num">H6</span><span class="h-row-name">Recognition rather than recall</span></div>
-          <div class="h-row"><span class="h-row-num">H7</span><span class="h-row-name">Flexibility and efficiency of use</span></div>
+          <div class="h-row h-row--violated"><span class="h-row-num">H1</span><span class="h-row-name">Visibility of system status</span></div>
+          <div class="h-row h-row--violated"><span class="h-row-num">H2</span><span class="h-row-name">Match between system and real world</span></div>
+          <div class="h-row h-row--violated"><span class="h-row-num">H3</span><span class="h-row-name">User control and freedom</span></div>
+          <div class="h-row h-row--violated"><span class="h-row-num">H4</span><span class="h-row-name">Consistency and standards</span></div>
+          <div class="h-row h-row--violated"><span class="h-row-num">H5</span><span class="h-row-name">Error prevention</span></div>
+          <div class="h-row h-row--violated"><span class="h-row-num">H6</span><span class="h-row-name">Recognition rather than recall</span></div>
+          <div class="h-row h-row--violated"><span class="h-row-num">H7</span><span class="h-row-name">Flexibility and efficiency of use</span></div>
           <div class="h-row"><span class="h-row-num">H8</span><span class="h-row-name">Aesthetic and minimalist design</span></div>
           <div class="h-row"><span class="h-row-num">H9</span><span class="h-row-name">Help users recognize, diagnose, recover from errors</span></div>
           <div class="h-row"><span class="h-row-num">H10</span><span class="h-row-name">Help and documentation</span></div>
@@ -918,42 +1194,58 @@
           <span class="section-pill">The flow</span>
         </div>
         <h2>Mapping the task.</h2>
-        <p>Five steps from landing to confirmation. Each step was evaluated independently before issues were consolidated.</p>
+        <p>Five steps from sign-in to confirmation. I evaluated each step independently before consolidating findings.</p>
 
         <div class="flow">
           <div class="flow-step">
             <div class="flow-step-num">Step 01</div>
             <div class="flow-step-name">Sign in</div>
-            <div class="flow-step-meta">Email + password, no SSO option.</div>
-            <div class="flow-step-issues">[N issues]</div>
+            <div class="flow-step-meta">Email + password.</div>
+            <div class="flow-step-issues">0 issues</div>
           </div>
           <div class="flow-step">
             <div class="flow-step-num">Step 02</div>
             <div class="flow-step-name">Select card</div>
             <div class="flow-step-meta">Choose registered card to load.</div>
-            <div class="flow-step-issues">[N issues]</div>
+            <div class="flow-step-issues">1 issue · #05</div>
           </div>
           <div class="flow-step">
             <div class="flow-step-num">Step 03</div>
-            <div class="flow-step-name">Enter amount</div>
-            <div class="flow-step-meta">Pick or type top-up amount.</div>
-            <div class="flow-step-issues">[N issues]</div>
+            <div class="flow-step-name">Add to cart</div>
+            <div class="flow-step-meta">Pick amount, add to cart, review.</div>
+            <div class="flow-step-issues">2 issues · #02 #03</div>
           </div>
           <div class="flow-step">
             <div class="flow-step-num">Step 04</div>
-            <div class="flow-step-name">Payment</div>
-            <div class="flow-step-meta">Card details / saved payment.</div>
-            <div class="flow-step-issues">[N issues]</div>
+            <div class="flow-step-name">Checkout</div>
+            <div class="flow-step-meta">Enter payment details, confirm.</div>
+            <div class="flow-step-issues">2 issues · #01 #04</div>
           </div>
           <div class="flow-step">
             <div class="flow-step-num">Step 05</div>
             <div class="flow-step-name">Confirmation</div>
-            <div class="flow-step-meta">Receipt &amp; "up to 24h" notice.</div>
-            <div class="flow-step-issues">[N issues]</div>
+            <div class="flow-step-meta">Receipt &amp; load status.</div>
+            <div class="flow-step-issues">0 issues</div>
           </div>
         </div>
 
-        <div class="placeholder" style="aspect-ratio: 16/9;">Annotated flow diagram</div>
+        <img src="images/presto/Presto screens.png" alt="Presto Add Funds flow screens" class="img-full zoomable" style="border-radius: var(--radius); margin-bottom: 1rem;" />
+        <div class="slideshow" id="flow-slideshow">
+          <div class="slideshow-track">
+            <img src="images/presto/Presto screens(0).png" alt="Presto flow — screen 1" class="slide zoomable" />
+            <img src="images/presto/Presto screens(1).png" alt="Presto flow — screen 2" class="slide" />
+            <img src="images/presto/Presto screens(2).png" alt="Presto flow — screen 3" class="slide" />
+            <img src="images/presto/Presto screens(3).png" alt="Presto flow — screen 4" class="slide" />
+            <img src="images/presto/Presto screens(4).png" alt="Presto flow — screen 5" class="slide" />
+            <img src="images/presto/Presto screens(5).png" alt="Presto flow — screen 6" class="slide" />
+            <img src="images/presto/Presto screens(6).png" alt="Presto flow — screen 7" class="slide" />
+            <img src="images/presto/Presto screens(7).png" alt="Presto flow — screen 8" class="slide" />
+          </div>
+          <button class="slideshow-btn slideshow-prev" aria-label="Previous slide">&#8592;</button>
+          <button class="slideshow-btn slideshow-next" aria-label="Next slide">&#8594;</button>
+          <div class="slideshow-counter" id="flow-counter">1 / 8</div>
+          <div class="slideshow-dots" id="flow-dots"></div>
+        </div>
       </section>
 
       <!-- Findings -->
@@ -963,36 +1255,38 @@
           <span class="section-pill">Findings</span>
         </div>
         <h2>Issues identified.</h2>
-        <p>Each issue is documented with a screenshot, the affected heuristic, the impact on the user, and a severity rating. Recommendations follow in §08.</p>
+        <p>Each finding is documented with a screenshot, the violated heuristic, the impact on the user, and a concrete recommendation.</p>
 
-        <!-- ISSUE 01 — the headline issue -->
+        <!-- ISSUE 01 -->
         <div class="issue">
           <div class="issue-head">
             <span class="issue-num">ISSUE 01</span>
-            <span class="issue-title">"Funds may take up to 24 hours to appear" with no progress visibility</span>
+            <span class="issue-title">No saved payment methods</span>
             <span class="issue-sev" data-sev="4">Sev 4 · Catastrophic</span>
           </div>
           <div class="issue-body">
             <div class="issue-img-wrap">
-              <div class="placeholder" style="aspect-ratio: 4/3;">Confirmation screen screenshot</div>
+              <div style="display:flex; flex-direction:column; gap:0.75rem; width:100%;">
+  <img src="images/presto/no saved payment method1.png" alt="No saved payment method — screen 1" class="zoomable" style="width:100%; border-radius: var(--radius); display:block;" />
+  <img src="images/presto/no saved payment method2.png" alt="No saved payment method — screen 2" class="zoomable" style="width:100%; border-radius: var(--radius); display:block;" />
+</div>
             </div>
             <div class="issue-text">
               <div class="h-chips">
-                <span class="h-chip">H1 · Status</span>
-                <span class="h-chip">H2 · Real world</span>
-                <span class="h-chip">H9 · Recover</span>
+                <span class="h-chip">H7 · Flexibility</span>
+                <span class="h-chip">H6 · Recognition</span>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Observation</p>
-                <p>After paying, users are told the load may take up to 24 hours to appear on the card. There's no live status, no progress indicator, no "ready by" estimate, and no way to verify the load completed before tapping at a gate.</p>
+                <p>Every reload requires users to re-enter full payment details: card number, expiry, CVV, and billing address, even after dozens of prior transactions on the same registered account. PRESTO offers a "last loaded amount" shortcut, but that solves the wrong problem. Users don't struggle to remember the amount. They struggle with the data-entry burden.</p>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Why it matters</p>
-                <p>Users come here under time pressure. A 24-hour worst case combined with no feedback turns a paid transaction into an open question — and a possible failed gate the next morning.</p>
+                <p>A task that should take 30 seconds for a returning user takes over 3 minutes. For a service used multiple times a month by millions of GTHA commuters, that friction compounds fast and gives users a reason to abandon the digital channel entirely.</p>
               </div>
               <div class="issue-recommend">
                 <p class="issue-block-label">Recommendation</p>
-                <p>Show typical fulfillment time prominently before payment ("Usually ready in ~10 min, up to 24h"). Send confirmation when funds are tap-ready. Provide a status check on the account page.</p>
+                <p>Allow users to save payment methods to their registered account and surface them at checkout with a single-tap selection. This is a standard pattern across payment flows and users already expect it here.</p>
               </div>
             </div>
           </div>
@@ -1002,28 +1296,33 @@
         <div class="issue">
           <div class="issue-head">
             <span class="issue-num">ISSUE 02</span>
-            <span class="issue-title">[Issue title — short, descriptive]</span>
+            <span class="issue-title">Cart replaces amount instead of accumulating</span>
             <span class="issue-sev" data-sev="3">Sev 3 · Major</span>
           </div>
           <div class="issue-body">
             <div class="issue-img-wrap">
-              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+              <div style="display:flex; flex-direction:column; gap:0.75rem; width:100%;">
+  <img src="images/presto/cart replcae amount1.png" alt="Cart replaces amount — screen 1" class="zoomable" style="width:100%; border-radius: var(--radius); display:block;" />
+  <img src="images/presto/cart replcae amount2.png" alt="Cart replaces amount — screen 2" class="zoomable" style="width:100%; border-radius: var(--radius); display:block;" />
+</div>
             </div>
             <div class="issue-text">
               <div class="h-chips">
-                <span class="h-chip">H? · [Heuristic]</span>
+                <span class="h-chip">H2 · Real world</span>
+                <span class="h-chip">H1 · Status</span>
+                <span class="h-chip">H5 · Error prevention</span>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Observation</p>
-                <p><em>[What did you see? Be specific about the screen and behavior.]</em></p>
+                <p>If a user adds $5 to the cart, then returns and adds $10, the cart silently updates to $10 rather than totaling $15. The interface uses the visual language of a shopping cart but breaks the behavior every e-commerce user expects: that carts accumulate. No feedback is shown when the prior amount is overwritten.</p>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Why it matters</p>
-                <p><em>[Impact on the user — what they can't do, get wrong, or worry about.]</em></p>
+                <p>Users can load less than intended without realizing it, then arrive at a station short of fare. The cart looks and behaves exactly like every other cart they have used, so there is no signal that this one works differently.</p>
               </div>
               <div class="issue-recommend">
                 <p class="issue-block-label">Recommendation</p>
-                <p><em>[Concrete fix — describe the change, not the heuristic.]</em></p>
+                <p>Either make the cart accumulate as users expect, or drop the cart pattern and use a single confirmed amount. If it must replace, show an explicit warning before overwriting: "This will replace the $5 currently in your cart."</p>
               </div>
             </div>
           </div>
@@ -1033,28 +1332,29 @@
         <div class="issue">
           <div class="issue-head">
             <span class="issue-num">ISSUE 03</span>
-            <span class="issue-title">[Issue title]</span>
+            <span class="issue-title">Cart amount not editable in place</span>
             <span class="issue-sev" data-sev="3">Sev 3 · Major</span>
           </div>
           <div class="issue-body">
             <div class="issue-img-wrap">
-              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+              <img src="images/presto/amount not editable.png" alt="Cart amount not editable" class="zoomable" style="width:100%; border-radius: var(--radius); display:block;" />
             </div>
             <div class="issue-text">
               <div class="h-chips">
-                <span class="h-chip">H? · [Heuristic]</span>
+                <span class="h-chip">H3 · User control</span>
+                <span class="h-chip">H7 · Flexibility</span>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Observation</p>
-                <p><em>[…]</em></p>
+                <p>To change the load amount after it is in the cart, users must remove the item entirely and navigate back to the add-funds page to start over. Inline editing is a standard pattern across modern e-commerce, and its absence here creates unnecessary steps for a common adjustment.</p>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Why it matters</p>
-                <p><em>[…]</em></p>
+                <p>Fixing a number requires restarting the flow. Taken with Issue 02, the cart actively resists users who change their mind, even though adjusting a transit reload amount is a completely expected behavior.</p>
               </div>
               <div class="issue-recommend">
                 <p class="issue-block-label">Recommendation</p>
-                <p><em>[…]</em></p>
+                <p>Add an editable input or stepper directly in the cart row. This is standard across every modern cart implementation and removes the need to navigate away to correct a single number.</p>
               </div>
             </div>
           </div>
@@ -1064,28 +1364,29 @@
         <div class="issue">
           <div class="issue-head">
             <span class="issue-num">ISSUE 04</span>
-            <span class="issue-title">[Issue title]</span>
-            <span class="issue-sev" data-sev="2">Sev 2 · Minor</span>
+            <span class="issue-title">No back button at checkout</span>
+            <span class="issue-sev" data-sev="3">Sev 3 · Major</span>
           </div>
           <div class="issue-body">
             <div class="issue-img-wrap">
-              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+              <img src="images/presto/no back button.png" alt="No back button on checkout" class="zoomable" style="width:100%; border-radius: var(--radius); display:block;" />
             </div>
             <div class="issue-text">
               <div class="h-chips">
-                <span class="h-chip">H? · [Heuristic]</span>
+                <span class="h-chip">H3 · User control</span>
+                <span class="h-chip">H5 · Error prevention</span>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Observation</p>
-                <p><em>[…]</em></p>
+                <p>The checkout page has no clear path back to the cart or any prior step. Users who want to verify their amount or switch cards have no in-page option. Their only recourse is the browser back button, which loses checkout context and forces a restart. This is a standard affordance in checkout flows that PRESTO omits entirely.</p>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Why it matters</p>
-                <p><em>[…]</em></p>
+                <p>Users who catch a mistake at checkout are stuck. They can push through with the wrong settings or start over from scratch. Both outcomes are preventable with one link.</p>
               </div>
               <div class="issue-recommend">
                 <p class="issue-block-label">Recommendation</p>
-                <p><em>[…]</em></p>
+                <p>Add a "Back to cart" link at the top of the checkout page. It gives users an intentional, in-page way to step back without losing their place.</p>
               </div>
             </div>
           </div>
@@ -1095,28 +1396,29 @@
         <div class="issue">
           <div class="issue-head">
             <span class="issue-num">ISSUE 05</span>
-            <span class="issue-title">[Issue title]</span>
-            <span class="issue-sev" data-sev="1">Sev 1 · Cosmetic</span>
+            <span class="issue-title">Inconsistent iconography across navigation and content</span>
+            <span class="issue-sev" data-sev="2">Sev 2 · Minor</span>
           </div>
           <div class="issue-body">
             <div class="issue-img-wrap">
-              <div class="placeholder" style="aspect-ratio: 4/3;">Screenshot</div>
+              <img src="images/presto/inconsistent icon.png" alt="Inconsistent iconography" class="zoomable" style="width:100%; border-radius: var(--radius); display:block;" />
             </div>
             <div class="issue-text">
               <div class="h-chips">
-                <span class="h-chip">H? · [Heuristic]</span>
+                <span class="h-chip">H4 · Consistency</span>
+                <span class="h-chip">H6 · Recognition</span>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Observation</p>
-                <p><em>[…]</em></p>
+                <p>The "Add Funds" icon on the page differs from the "Add Funds" icon in the side navigation. More critically, the in-page icon is the same one used for "Autoload" in the navigation, meaning the same visual symbol represents two different functions depending on where it appears.</p>
               </div>
               <div class="issue-block">
                 <p class="issue-block-label">Why it matters</p>
-                <p><em>[…]</em></p>
+                <p>Icons should reduce cognitive load by making functions recognizable at a glance. Here they do the opposite: the same icon means different things in different places, forcing users to rely on memory rather than recognition. This points to a broader inconsistency in how the icon set is being managed across the product.</p>
               </div>
               <div class="issue-recommend">
                 <p class="issue-block-label">Recommendation</p>
-                <p><em>[…]</em></p>
+                <p>Audit and align the icon set across navigation and page content. Each icon should map to exactly one function. Adopt a shared icon library and treat it as a design system resource, not a per-page decision.</p>
               </div>
             </div>
           </div>
@@ -1130,7 +1432,7 @@
           <span class="section-pill">Priority</span>
         </div>
         <h2>Where to fix first.</h2>
-        <p>Issues plotted by severity (rows) and step in the flow (columns) — making it easy to see where in the journey users hit the heaviest friction.</p>
+        <p>Issues plotted by severity and step in the flow. The checkout step carries the heaviest load, with a catastrophic issue and a major issue landing in the same column.</p>
 
         <div class="matrix-wrap">
           <div class="matrix-head">
@@ -1140,66 +1442,105 @@
             <div class="matrix-cell matrix-cell-head"></div>
             <div class="matrix-cell matrix-cell-head">Sign in</div>
             <div class="matrix-cell matrix-cell-head">Select card</div>
-            <div class="matrix-cell matrix-cell-head">Amount + pay</div>
-            <div class="matrix-cell matrix-cell-head">Confirmation</div>
+            <div class="matrix-cell matrix-cell-head">Add to cart</div>
+            <div class="matrix-cell matrix-cell-head">Checkout</div>
 
             <div class="matrix-cell matrix-cell-head">Sev 4</div>
             <div class="matrix-cell"></div>
             <div class="matrix-cell"></div>
             <div class="matrix-cell"></div>
-            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="4">#01 24h delay</span></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="4">#01 No saved payment</span></div>
 
             <div class="matrix-cell matrix-cell-head">Sev 3</div>
-            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="3">#02</span></div>
             <div class="matrix-cell"></div>
-            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="3">#03</span></div>
             <div class="matrix-cell"></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="3">#02 Cart replaces</span><span class="matrix-issue-tag" data-sev="3">#03 Not editable</span></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag" data-sev="3">#04 No back button</span></div>
 
             <div class="matrix-cell matrix-cell-head">Sev 2</div>
             <div class="matrix-cell"></div>
-            <div class="matrix-cell"><span class="matrix-issue-tag">#04</span></div>
+            <div class="matrix-cell"><span class="matrix-issue-tag">#05 Inconsistent icons</span></div>
             <div class="matrix-cell"></div>
             <div class="matrix-cell"></div>
 
             <div class="matrix-cell matrix-cell-head">Sev 1</div>
             <div class="matrix-cell"></div>
             <div class="matrix-cell"></div>
-            <div class="matrix-cell"><span class="matrix-issue-tag">#05</span></div>
+            <div class="matrix-cell"></div>
             <div class="matrix-cell"></div>
           </div>
         </div>
       </section>
 
-      <!-- Recommendations -->
-      <section class="section" id="recommendations">
+      <!-- Redesign -->
+      <section class="section" id="redesign">
         <div class="section-meta">
           <span class="section-num">08</span>
-          <span class="section-pill">Recommendations</span>
+          <span class="section-pill">Redesign</span>
         </div>
-        <h2>Top fixes.</h2>
-        <p>The three recommendations that would have the biggest impact on user trust and time-to-success in this flow.</p>
+        <h2>Redesigning the cart and checkout.</h2>
+        <p>I redesigned the Cart and Checkout pages to address the four highest-priority issues: no saved payment methods, a cart that replaces instead of accumulates, no inline amount editing, and no way to step back from checkout.</p>
 
-        <div class="recs">
-          <div class="rec">
-            <div class="rec-priority">PRIORITY 01</div>
-            <h4>Make fulfillment time visible &amp; verifiable</h4>
-            <p>Surface typical processing time before payment, send a "ready to tap" notification, and add a status indicator on the account page so users never tap a gate guessing whether the load went through.</p>
+        <div class="ba-slider" id="ba-cart" style="margin-top: 2rem;">
+          <!-- Before (bottom layer) -->
+          <img src="images/presto/Presto screens(4).png" alt="Before: original cart" />
+          <!-- After (top layer, clipped) -->
+          <div class="ba-after" id="ba-cart-after">
+            <img src="images/presto/redesign cart.png" alt="After: redesigned cart" id="ba-cart-after-img" />
           </div>
-          <div class="rec">
-            <div class="rec-priority">PRIORITY 02</div>
-            <h4>[Recommendation 2]</h4>
-            <p><em>[Tied to a Sev 3 issue. Describe the change in product terms — what users see and do differently afterward.]</em></p>
+          <!-- Handle -->
+          <div class="ba-handle" id="ba-cart-handle">
+            <div class="ba-handle-icon">&#8592;&nbsp;&nbsp;&#8594;</div>
           </div>
-          <div class="rec">
-            <div class="rec-priority">PRIORITY 03</div>
-            <h4>[Recommendation 3]</h4>
-            <p><em>[A high-leverage smaller fix — perhaps consistency or recognition-vs-recall.]</em></p>
+          <!-- Labels -->
+          <span class="ba-label ba-label-before">Before</span>
+          <span class="ba-label ba-label-after">After</span>
+        </div>
+        <div class="redesign-changes">
+          <div class="redesign-change">
+            <span class="redesign-change-num">1</span>
+            <div>
+              <strong>Inline amount editing</strong>
+              <p>The static amount display is replaced with an editable input directly in the cart row. Users can adjust their load amount without removing the item and navigating back. This resolves Issues 02 and 03 together: the cart no longer silently overwrites, and fixing a mistake costs one tap instead of a full restart.</p>
+            </div>
+          </div>
+          <div class="redesign-change">
+            <span class="redesign-change-num">2</span>
+            <div>
+              <strong>Progress stepper</strong>
+              <p>A step indicator at the top of the page shows where users are in the flow: Cart, Checkout, Confirmation. Knowing how many steps remain reduces the uncertainty that drives mid-flow abandonment.</p>
+            </div>
           </div>
         </div>
 
-        <h3>Proposed redesign (optional)</h3>
-        <p><em>[If you mock up a redesigned confirmation screen with proper system status, drop it in here.]</em></p>
-        <div class="placeholder" style="aspect-ratio: 16/9;">Redesigned confirmation screen mock</div>
+        <div class="ba-slider" id="ba-checkout" style="margin-top: 1rem;">
+          <img src="images/presto/checkout screen.png" alt="Before: original checkout" />
+          <div class="ba-after" id="ba-checkout-after">
+            <img src="images/presto/redesign checkout.png?v=2" alt="After: redesigned checkout" id="ba-checkout-after-img" />
+          </div>
+          <div class="ba-handle" id="ba-checkout-handle">
+            <div class="ba-handle-icon">&#8592;&nbsp;&nbsp;&#8594;</div>
+          </div>
+          <span class="ba-label ba-label-before">Before</span>
+          <span class="ba-label ba-label-after">After</span>
+        </div>
+
+        <div class="redesign-changes">
+          <div class="redesign-change">
+            <span class="redesign-change-num">1</span>
+            <div>
+              <strong>Back to cart</strong>
+              <p>A "Back to cart" link at the top of checkout gives users an explicit, in-page way to step back and adjust before committing. They no longer have to use the browser back button as their only exit, which loses checkout context and forces a restart.</p>
+            </div>
+          </div>
+          <div class="redesign-change">
+            <span class="redesign-change-num">2</span>
+            <div>
+              <strong>Save card for next time</strong>
+              <p>A checkbox at checkout lets users save their payment details to their registered account. On future visits, their card is pre-filled and ready to use. This directly addresses Issue 01, turning a 3-minute re-entry task back into a 30-second one.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Reflection -->
@@ -1209,19 +1550,9 @@
           <span class="section-pill">Reflection</span>
         </div>
         <h2>What I learned.</h2>
-        <p><strong>Pick a flow with stakes.</strong> The Add Funds flow surfaced richer issues than a browse-only task because real money, real time pressure, and a hardware confirmation step compound every small UX failure.</p>
-        <p><strong>Heuristics are a vocabulary, not a verdict.</strong> Tagging issues to H1 / H2 / H9 helps communicate <em>why</em> something feels broken — but the value is in the specific recommendation, not in the heuristic name.</p>
-        <p><strong>If I had more time…</strong> I'd validate severity ratings with a second evaluator and run a small unmoderated test on the confirmation screen redesign.</p>
+        <p><strong>Individual issues often point to a single root decision.</strong> Going in, I expected to document a list of separate problems. What I found was that Issues 01 through 04 were all symptoms of the same thing: a flow built for a first-time user on a linear path, not the returning commuter who uses it every week. Identifying that pattern, rather than treating each issue in isolation, made the recommendations sharper and gave the redesign a clear through line.</p>
+        <p><strong>If I had more time.</strong> I would revisit the lower-priority findings that didn't make the cut but would still improve the experience over time. I would also extend the scope to other high-frequency tasks: setting up Autoload, registering a new card, and managing payment methods. Applying the same framework across those flows would give a much fuller picture of where the product stands as a whole.</p>
 
-        <div class="cta-row">
-          <a href="bakebasket-case-study.html" class="btn btn-primary">
-            <span>Next case study</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-          <a href="index.html#work" class="btn btn-secondary">
-            <span>Back to work</span>
-          </a>
-        </div>
       </section>
 
     </article>
@@ -1232,18 +1563,16 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       All work
     </a>
-    <a href="bakebasket-case-study.html" class="bottom-nav-link">
-      Next case study: Bake Basket
+    <a href="game-revamp-case-study.html" class="bottom-nav-link">
+      Next case study: Electronic Arts
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </nav>
 
   <footer class="footer">
-    <p>© 2026 Katie Lei · Toronto, ON</p>
+    <p>© 2026 Katie Lei</p>
     <div class="footer-links">
       <a href="mailto:katie.sinlei@gmail.com">Email</a>
-      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="#" target="_blank" rel="noopener">Dribbble</a>
     </div>
   </footer>
 
@@ -1281,6 +1610,140 @@
         });
       }, { rootMargin: '-30% 0px -60% 0px' });
       sections.forEach(function(s) { io.observe(s); });
+    })();
+  </script>
+
+  <!-- Before / After Slider -->
+  <script>
+    (function() {
+      function initSlider(sliderId, afterId, afterImgId, handleId, startPct) {
+        startPct = startPct !== undefined ? startPct : 100;
+        var el      = document.getElementById(sliderId);
+        var after   = document.getElementById(afterId);
+        var afterImg= document.getElementById(afterImgId);
+        var handle  = document.getElementById(handleId);
+        if (!el) return;
+
+        function setPos(pct) {
+          pct = Math.max(2, Math.min(98, pct));
+          after.style.width = pct + '%';
+          handle.style.left = pct + '%';
+          // keep after-img full-width regardless of clip
+          afterImg.style.width = el.offsetWidth + 'px';
+        }
+
+        function onMove(clientX) {
+          var rect = el.getBoundingClientRect();
+          var pct  = ((clientX - rect.left) / rect.width) * 100;
+          setPos(pct);
+        }
+
+        // Mouse
+        el.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          function move(e) { onMove(e.clientX); }
+          function up()   { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); }
+          document.addEventListener('mousemove', move);
+          document.addEventListener('mouseup', up);
+          onMove(e.clientX);
+        });
+
+        // Touch
+        el.addEventListener('touchstart', function(e) {
+          function move(e) { onMove(e.touches[0].clientX); }
+          function end()   { el.removeEventListener('touchmove', move); el.removeEventListener('touchend', end); }
+          el.addEventListener('touchmove', move, { passive: true });
+          el.addEventListener('touchend', end);
+          onMove(e.touches[0].clientX);
+        }, { passive: true });
+
+        // Init at startPct after images load
+        window.addEventListener('load', function() { setPos(startPct); });
+        setPos(startPct);
+      }
+
+      initSlider('ba-cart', 'ba-cart-after', 'ba-cart-after-img', 'ba-cart-handle');
+      initSlider('ba-checkout', 'ba-checkout-after', 'ba-checkout-after-img', 'ba-checkout-handle', 50);
+    })();
+  </script>
+
+  <!-- Slideshow -->
+  <script>
+    (function() {
+      var ss      = document.getElementById('flow-slideshow');
+      var track   = ss.querySelector('.slideshow-track');
+      var slides  = ss.querySelectorAll('.slide');
+      var prev    = ss.querySelector('.slideshow-prev');
+      var next    = ss.querySelector('.slideshow-next');
+      var dotsWrap= document.getElementById('flow-dots');
+      var counter = document.getElementById('flow-counter');
+      var current = 0;
+      var total   = slides.length;
+
+      // Build dots
+      slides.forEach(function(_, i) {
+        var d = document.createElement('button');
+        d.className = 'slideshow-dot' + (i === 0 ? ' is-active' : '');
+        d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        d.addEventListener('click', function() { go(i); });
+        dotsWrap.appendChild(d);
+      });
+
+      function dots() { return dotsWrap.querySelectorAll('.slideshow-dot'); }
+
+      function go(n) {
+        current = (n + total) % total;
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        dots().forEach(function(d, i) { d.classList.toggle('is-active', i === current); });
+        counter.textContent = (current + 1) + ' / ' + total;
+        prev.disabled = false;
+        next.disabled = false;
+        // make only current slide zoomable
+        slides.forEach(function(s, i) { s.classList.toggle('zoomable', i === current); });
+      }
+
+      prev.addEventListener('click', function() { go(current - 1); });
+      next.addEventListener('click', function() { go(current + 1); });
+
+      // keyboard when slideshow is focused
+      ss.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft')  go(current - 1);
+        if (e.key === 'ArrowRight') go(current + 1);
+      });
+
+      go(0);
+    })();
+  </script>
+
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close">✕</button>
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+  <script>
+    (function() {
+      var overlay = document.getElementById('lightbox');
+      var lbImg   = document.getElementById('lightbox-img');
+      var lbClose = document.getElementById('lightbox-close');
+
+      function open(src, alt) {
+        lbImg.src = src;
+        lbImg.alt = alt;
+        overlay.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        overlay.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.zoomable').forEach(function(img) {
+        img.addEventListener('click', function() { open(img.src, img.alt); });
+      });
+
+      lbClose.addEventListener('click', close);
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
     })();
   </script>
 

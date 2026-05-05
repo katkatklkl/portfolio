@@ -161,13 +161,15 @@
 
     .hero-meta {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
+      grid-template-columns: repeat(3, minmax(0,1fr)) auto;
       gap: 1.5rem 2rem;
+      align-items: end;
       padding-top: 2rem;
       border-top: 1px solid var(--rule);
     }
     @media (max-width: 720px) {
       .hero-meta { grid-template-columns: repeat(2, 1fr); }
+      .hero-meta-cta { grid-column: 1 / -1; }
     }
     .hero-meta-item {
       display: flex; flex-direction: column; gap: 0.35rem;
@@ -821,7 +823,7 @@
     </div>
     <div class="topbar-right">
       <a href="index.html#contact" class="topbar-link">Contact</a>
-      <a href="https://www.figma.com/proto/L8KWsWZbsNG2pA5q7rweKc/Bake-Casket-Proto?node-id=1-423&p=f&t=T84t41O7Q0S0YIgl-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A423" target="_blank" rel="noopener" class="topbar-cta">View prototype ↗</a>
+      <a href="presto-heuristic-evaluation.html" class="topbar-cta">Next case study →</a>
     </div>
   </header>
 
@@ -831,17 +833,13 @@
       <span class="hero-eyebrow-dot"></span>
       Case study · 2025
     </span>
-    <h1 class="hero-title">Helping beginner bakers commit to baking, one kit at a time.</h1>
-    <p class="hero-subtitle">A mobile e-commerce app for curated baking kits — designed to remove the friction of buying full ingredients, so beginners can enjoy baking without the waste or commitment.</p>
+    <h1 class="hero-title">Removing the friction that stops beginner bakers before they start.</h1>
+    <p class="hero-subtitle">The barrier to baking isn't skill, it's the shopping trip. Too many ingredients, too much waste, too much commitment for something they're not sure they'll enjoy. Bake Basket is a mobile e-commerce app built around impulse: pre-portioned kits that make it easy to just try, right now, with no over-commitment.</p>
 
     <div class="hero-meta">
       <div class="hero-meta-item">
         <span class="hero-meta-label">Role</span>
-        <span class="hero-meta-value">Lead UI/UX Designer</span>
-      </div>
-      <div class="hero-meta-item">
-        <span class="hero-meta-label">Timeline</span>
-        <span class="hero-meta-value">8 weeks · 2025</span>
+        <span class="hero-meta-value">UI/UX Designer · User Research · User Testing</span>
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Platform</span>
@@ -850,6 +848,12 @@
       <div class="hero-meta-item">
         <span class="hero-meta-label">Tools</span>
         <span class="hero-meta-value">Figma, Miro</span>
+      </div>
+      <div class="hero-meta-cta">
+        <a href="https://www.figma.com/proto/L8KWsWZbsNG2pA5q7rweKc/Bake-Casket-Proto?node-id=1-423&p=f&t=T84t41O7Q0S0YIgl-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A423" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <span>View prototype</span>
+          <span aria-hidden="true">↗</span>
+        </a>
       </div>
     </div>
   </section>
@@ -893,24 +897,24 @@
           <span class="section-pill">Summary</span>
         </div>
         <h2>At a glance</h2>
-        <p>Baking is a hobby that lives in moments — date nights, family afternoons, casual weekends — but buying full-sized ingredients to support those moments feels wasteful and intimidating. Bake Basket sells curated, pre-portioned kits so beginners can bake on impulse, without the leftover commitment.</p>
+        <p>The insight that shaped this project was simple: beginner bakers aren't held back by skill, they're held back by the commitment that comes before they even start. Buying a full set of ingredients for a recipe you might not enjoy is a real barrier. This project was about designing around that, building a mobile e-commerce experience that supports impulse rather than planning.</p>
 
         <div class="summary" style="margin-top: 2rem;">
           <div class="summary-cell">
             <p class="summary-label">Problem</p>
-            <p class="summary-text">Beginners avoid baking because full ingredients feel wasteful and impractical for one-off recipes.</p>
+            <p class="summary-text">The cost and waste of buying full ingredients discourages beginners from trying baking at all.</p>
           </div>
           <div class="summary-cell">
             <p class="summary-label">Solution</p>
-            <p class="summary-text">A mobile-first e-commerce app for one-time, pre-portioned baking kits — no subscription required.</p>
+            <p class="summary-text">A mobile e-commerce app for pre-portioned, one-time baking kits. Low commitment, no subscription, built for impulse.</p>
           </div>
           <div class="summary-cell">
             <p class="summary-label">My role</p>
-            <p class="summary-text">End-to-end ownership: research, IA, wireframes, visual design, prototype, and usability testing.</p>
+            <p class="summary-text">End-to-end: user research, information architecture, wireframing, visual design, and usability testing.</p>
           </div>
           <div class="summary-cell">
             <p class="summary-label">Outcome</p>
-            <p class="summary-text">High-fidelity prototype validated through 3 usability tests, with 4 design iterations addressing key friction points.</p>
+            <p class="summary-text">High-fidelity prototype validated through 3 usability tests, with 4 design iterations addressing identified friction points.</p>
           </div>
         </div>
       </section>
@@ -921,13 +925,13 @@
           <span class="section-num">02</span>
           <span class="section-pill">Context &amp; problem</span>
         </div>
-        <h2>Baking shouldn't require a subscription.</h2>
-        <p>Most baking happens occasionally — for a date night, a family gathering, or a casual afternoon. Yet to participate, beginners need to buy full-sized ingredients for recipes they may only make once. The result: pantries fill up with bottles of vanilla extract and bags of flour that go unused, and people opt out of baking altogether.</p>
-        <p>Existing meal kit services solve a similar problem for cooking, but they assume routine use through subscriptions — a model that doesn't fit the occasional, social nature of baking.</p>
+        <h2>The problem wasn't baking. It was everything before it.</h2>
+        <p>Baking tends to happen around specific moments: a weekend afternoon, a get-together, a personal project. But participating as a beginner means committing to full-sized ingredients for recipes you might only make once. Pantries fill up with half-used bottles and unopened bags, and that waste becomes the reason people stop before they get started.</p>
+        <p>Existing meal kit services address a related problem in cooking, but they're built around routine. Subscriptions, weekly deliveries, ongoing commitment. That model doesn't translate to how baking actually works for most beginners. The gap I was designing for was impulse: someone who wants to bake something this weekend, not someone building a meal plan.</p>
 
         <div class="hmw">
           <p class="hmw-label">How might we…</p>
-          <p class="hmw-text">… create a low-effort, low-commitment shopping experience that helps users quickly find and confidently purchase recipe kits without feeling overwhelmed?</p>
+          <p class="hmw-text">… design a shopping experience with low enough friction that a beginner can go from "I want to try this" to checkout without second-guessing the commitment?</p>
         </div>
       </section>
 
@@ -937,8 +941,8 @@
           <span class="section-num">03</span>
           <span class="section-pill">User research</span>
         </div>
-        <h2>Listening to real bakers.</h2>
-        <p>I conducted semi-structured interviews with five participants aged 20–35 to understand baking motivations, barriers, and behaviors.</p>
+        <h2>Understanding why beginners don't start.</h2>
+        <p>Before defining any solutions, I wanted to understand the actual barriers from the people experiencing them. I interviewed five participants aged 20 to 35, focusing on what baking looks like in their lives, where they drop off, and what would make them more likely to try.</p>
 
         <div class="stats">
           <div class="stat">
@@ -957,20 +961,20 @@
 
         <h3>Key insights</h3>
         <ul class="takeaways">
-          <li>Most participants avoided baking because they didn't want to buy full-sized ingredients they might not reuse.</li>
-          <li>Many felt intimidated by long ingredient lists, unclear steps, and unfamiliar tools.</li>
-          <li>All participants said they'd be more likely to bake if all ingredients were provided and pre-measured.</li>
+          <li>The most common barrier was ingredient waste. Participants didn't want to buy full-sized products for a recipe they might only make once.</li>
+          <li>Long ingredient lists and unfamiliar steps made baking feel inaccessible before it even began.</li>
+          <li>Every participant said they would bake more often if ingredients came pre-portioned and ready to use.</li>
         </ul>
 
         <h3>In their own words</h3>
         <div class="quotes">
           <div class="quote">
             <span class="quote-mark">P02 · 28F</span>
-            "I tried making cupcakes years ago and had a lot of leftover ingredients — like a whole bag of flour and a bottle of vanilla extract that I only used a few drops of."
+            "I tried making cupcakes years ago and had a lot of leftover ingredients. Like a whole bag of flour and a bottle of vanilla extract that I only used a few drops of."
           </div>
           <div class="quote">
             <span class="quote-mark">P04 · 31F</span>
-            "The baking part is fun, but anything before that is not — like going out shopping for all the ingredients, and then measuring everything."
+            "The baking part is fun, but anything before that is not. Like going out shopping for all the ingredients, and then measuring everything."
           </div>
         </div>
       </section>
@@ -981,8 +985,8 @@
           <span class="section-num">04</span>
           <span class="section-pill">Competitive analysis</span>
         </div>
-        <h2>Finding the gap in the market.</h2>
-        <p>I analyzed three meal and baking kit companies to identify market gaps and opportunities for differentiation.</p>
+        <h2>Mapping what already exists.</h2>
+        <p>I analyzed three companies across meal kits and baking kits to understand what features existed, what assumptions they made about users, and where the gaps were. The consistent pattern I found: every competitor required a subscription, and none of them were designed around the occasional, social nature of baking.</p>
 
         <div class="competitors">
           <div class="competitor"><img src="images/competitors/blue-apron.png" alt="Blue Apron" /></div>
@@ -1010,15 +1014,15 @@
           <div class="twocol-block">
             <h4>Strengths</h4>
             <ul class="takeaways">
-              <li>Low commitment: no subscription, easy one-time use.</li>
-              <li>Designed for hobby and social moments — dates, family, casual fun.</li>
+              <li>No subscription required. One-time purchase lowers the barrier to entry significantly.</li>
+              <li>Positioned around social and hobby moments rather than weekly meal planning.</li>
             </ul>
           </div>
           <div class="twocol-block">
             <h4>Risks</h4>
             <ul class="takeaways">
-              <li>Lower retention without a subscription model.</li>
-              <li>Less habit-based usage than routine meal services.</li>
+              <li>Without a subscription, repeat purchase behaviour depends entirely on the quality of the first experience.</li>
+              <li>Less built-in retention compared to habit-based meal services.</li>
             </ul>
           </div>
         </div>
@@ -1031,7 +1035,7 @@
           <span class="section-pill">User persona</span>
         </div>
         <h2>Meet Heather.</h2>
-        <p>Synthesized from interviews, Heather represents the primary user — someone who enjoys the idea of baking but finds the logistics too high-effort for the occasional payoff.</p>
+        <p>After synthesizing the interview findings, I built a persona to keep design decisions grounded in a specific user. Heather captures the pattern that came up most consistently: someone who genuinely wants to bake but finds the setup cost higher than the payoff.</p>
 
         <div class="persona">
           <div>
@@ -1040,7 +1044,7 @@
           <div>
             <h3 class="persona-name" style="margin: 0 0 0.25rem;">Heather, 28</h3>
             <p class="persona-role">Environmental Engineer · Toronto, ON</p>
-            <p class="persona-bio">Works a busy 9–5, unwinds with small creative hobbies. Used to bake with family, but since moving into a small apartment rarely does — limited space, missing tools, and leftover ingredients make it feel impractical. Still loves the idea for date nights or small gatherings, but the effort and commitment usually stop her.</p>
+            <p class="persona-bio">Works a busy 9 to 5 and unwinds with small creative hobbies. Used to bake with family, but since moving into a smaller apartment she rarely does. Limited space, missing tools, and leftover ingredients make it feel impractical. She still loves the idea for date nights or small gatherings, but the effort and commitment usually stop her before she starts.</p>
             <div class="persona-grid">
               <div>
                 <p class="persona-list-label">Goals</p>
@@ -1070,7 +1074,7 @@
           <span class="section-pill">Solution</span>
         </div>
         <h2>A simple, playful shopping experience.</h2>
-        <p>Design a streamlined journey — <strong>discover → review → cart → checkout</strong> — where every step removes friction rather than adding to it. Browsing should feel exciting, not overwhelming. Decisions should be easy to make, easy to revise.</p>
+        <p>The research pointed toward a clear design goal: reduce the number of decisions a user has to make before they commit. I structured the experience around a four-step journey: <strong>discover → review → cart → checkout</strong>. Each step had one job. Browsing needed to feel inviting without being overwhelming. The product page needed to give users enough confidence to add to cart without second-guessing. Checkout needed to stay out of the way.</p>
       </section>
 
       <!-- IA -->
@@ -1080,7 +1084,7 @@
           <span class="section-pill">Information architecture</span>
         </div>
         <h2>Site map &amp; user flow.</h2>
-        <p>The sitemap visualizes the app's structure — minimal navigation, streamlined checkout. The user flow maps how users move through the app, supporting both exploratory browsing and impulse-based purchasing.</p>
+        <p>I mapped out the app's structure and the paths a user would take through it. The sitemap kept navigation minimal: the fewer places a user has to think about going, the faster they get to the thing they actually want.</p>
         <img class="img-full" src="images/sitemap.png" alt="Bake Basket site map" />
         <img class="img-full" src="images/userflow.png" alt="Bake Basket user flow" />
       </section>
@@ -1092,7 +1096,7 @@
           <span class="section-pill">Wireframes</span>
         </div>
         <h2>Low-fidelity wireframes.</h2>
-        <p>I sketched out the core screens to validate layout decisions before committing to visual design.</p>
+        <p>I wireframed the core screens in Figma to validate layout decisions before committing to visual design.</p>
         <div class="img-grid">
           <img src="images/Home%20Page.png" alt="Home Page" loading="lazy" />
           <img src="images/Saved%20Recipes%20(Empty).png" alt="Saved Recipes (Empty)" loading="lazy" />
@@ -1113,7 +1117,7 @@
           <span class="section-pill">Visual design</span>
         </div>
         <h2>Warm, playful, approachable.</h2>
-        <p>The visual direction leans into a homemade, cosy feeling — soft pastel oranges and gentle neutrals, rounded type, pill buttons, and softened card edges create an interface that feels friendly rather than clinical.</p>
+        <p>I built the system around soft pastel oranges and warm neutrals to give it a homemade, cosy feel. Rounded type, pill buttons, and softened card edges kept everything approachable. The goal was an interface that felt inviting rather than functional, one that matched the low-pressure, enjoyable experience the product was built around.</p>
         <img class="img-full" src="images/ui%20kit.png" alt="UI kit and visual system" loading="lazy" />
       </section>
 
@@ -1144,7 +1148,7 @@
           <span class="section-pill">Usability testing</span>
         </div>
         <h2>Testing the prototype.</h2>
-        <p>I ran an unmoderated usability test with 3 participants on the high-fidelity prototype to surface friction points, validate the purchase flow, and verify navigation clarity.</p>
+        <p>I ran a usability test with 3 participants on the high-fidelity prototype. The goal was to identify where the experience broke down, validate that the purchase flow worked end to end, and check whether navigation felt intuitive without guidance.</p>
         <img class="img-full" src="images/usability%20test1.png" alt="Usability testing results" loading="lazy" />
 
         <h3>Key findings</h3>
@@ -1152,17 +1156,17 @@
           <div class="finding">
             <div class="finding-num">FINDING 01</div>
             <h4>Filter navigation was confusing</h4>
-            <p>Participants struggled to narrow recipes — unclear which tags were active, no obvious way to reset.</p>
+            <p>Participants had difficulty narrowing recipes down. It wasn't clear which tags were active, and there was no obvious way to reset the filters once applied.</p>
           </div>
           <div class="finding">
             <div class="finding-num">FINDING 02</div>
             <h4>Trapped on secondary pages</h4>
-            <p>From Saved or Cart, users could only return to Home — forcing unnecessary backtracking between sections.</p>
+            <p>From Saved or Cart, users could only navigate back to Home. This forced unnecessary backtracking when they wanted to move between sections directly.</p>
           </div>
           <div class="finding">
             <div class="finding-num">FINDING 03</div>
             <h4>Browsing felt overwhelming</h4>
-            <p>Too many filter tags exposed at once during discovery led to decision fatigue before users even reached a recipe.</p>
+            <p>Too many filter tags were visible at once during discovery. Users hit decision fatigue before they even reached a recipe, which was the opposite of the low-friction experience the app was designed around.</p>
           </div>
         </div>
       </section>
@@ -1174,7 +1178,7 @@
           <span class="section-pill">Iterations</span>
         </div>
         <h2>Iterating from feedback.</h2>
-        <p>Each iteration addressed a specific friction point uncovered during testing — making the experience clearer, more intuitive, and better matched to how users actually navigate.</p>
+        <p>Each iteration traced directly back to a finding from testing. The goal wasn't to redesign for its own sake but to fix the specific places where users got stuck or slowed down.</p>
 
         <div class="iter">
           <div class="iter-head">
@@ -1184,14 +1188,14 @@
           <div class="iter-body">
             <div class="iter-img-wrap">
               <span class="iter-img-label">Before / After</span>
-              <img src="images/iteration/Iteration%201.png" alt="Filter — before and after" loading="lazy" />
+              <img src="images/iteration/Iteration%201.png" alt="Filter before and after" loading="lazy" />
             </div>
             <div class="iter-img-wrap">
               <span class="iter-img-label iter-img-label--after">Filter modal</span>
               <img src="images/iteration/Iteration%201a.png" alt="Filter modal" loading="lazy" />
             </div>
           </div>
-          <p class="iter-caption">Tags cluttered the home page on first glance and made the filter system harder to understand. I condensed them into a single Filter button with grouped categories — reducing visual noise so users aren't overwhelmed before they've even started browsing.</p>
+          <p class="iter-caption">The tags on the home screen were creating noise before users even started browsing. I condensed the filter system into a single button that opens a grouped modal, which reduced cognitive load at the entry point and made the active filter state much clearer.</p>
         </div>
 
         <div class="iter">
@@ -1201,15 +1205,15 @@
           </div>
           <div class="iter-body">
             <div class="iter-img-wrap">
-              <span class="iter-img-label">Empty state</span>
-              <img src="images/iteration/Iteration%201b.png" alt="Surprise Me — empty state" loading="lazy" />
+              <span class="iter-img-label">Surprise Me Page</span>
+              <img src="images/iteration/Iteration%201b.png" alt="Surprise Me empty state" loading="lazy" />
             </div>
             <div class="iter-img-wrap">
-              <span class="iter-img-label iter-img-label--after">Active state</span>
-              <img src="images/iteration/Iteration%201c.png" alt="Surprise Me — active state" loading="lazy" />
+              <span class="iter-img-label iter-img-label--after">Recipe Card Pop-up</span>
+              <img src="images/iteration/Iteration%201c.png" alt="Surprise Me active state" loading="lazy" />
             </div>
           </div>
-          <p class="iter-caption">Since the app supports impulse buying, I added a Surprise Me feature that presents 3 randomly selected recipes instead of the full list. Narrowing the view helps users decide faster and adds a playful element to the discovery experience.</p>
+          <p class="iter-caption">Testing showed users slowing down when faced with the full recipe list. I added a Surprise Me button that surfaces 3 randomly selected recipes, which shortens the decision path and reinforces the impulse-first nature of the product.</p>
         </div>
 
         <div class="iter">
@@ -1219,11 +1223,11 @@
           </div>
           <div class="iter-body iter-body--single">
             <div class="iter-img-wrap">
-              <span class="iter-img-label iter-img-label--after">After</span>
+              <span class="iter-img-label iter-img-label--after">Before / After</span>
               <img src="images/iteration/Iteration%202.png" alt="Recipe card redesign" loading="lazy" />
             </div>
           </div>
-          <p class="iter-caption">Resized cards so the next recipe peeks into view, encouraging continued scrolling. Added "New" and "Popular" tags to surface noteworthy recipes without overwhelming the layout.</p>
+          <p class="iter-caption">I resized the cards so the next recipe peeks into view, giving users a visual cue to keep scrolling. New and Popular tags were added to help surface relevant recipes without adding more decisions to the browsing experience.</p>
         </div>
 
         <div class="iter">
@@ -1233,11 +1237,11 @@
           </div>
           <div class="iter-body iter-body--single">
             <div class="iter-img-wrap">
-              <span class="iter-img-label iter-img-label--after">After</span>
+              <span class="iter-img-label iter-img-label--after">Before / After</span>
               <img src="images/iteration/Iteration%203.png" alt="Persistent navigation footer" loading="lazy" />
             </div>
           </div>
-          <p class="iter-caption">Added a persistent navigation footer to secondary pages so users can jump between Home, Saved, Cart, and Account directly — eliminating backtracking and keeping the browsing flow effortless.</p>
+          <p class="iter-caption">Users on secondary pages had no direct way to move between sections, which meant going back to Home every time. Adding a persistent footer navigation fixed the backtracking issue and made the overall flow feel more connected.</p>
         </div>
       </section>
 
@@ -1248,7 +1252,7 @@
           <span class="section-pill">Final design</span>
         </div>
         <h2>Final screens.</h2>
-        <p>The shipped flow — from browse to checkout to confirmation.</p>
+        <p>From browse to checkout to confirmation.</p>
         <div class="img-grid">
           <img src="images/final%20design/Home.png" alt="Home" loading="lazy" />
           <img src="images/final%20design/Filter.png" alt="Filter" loading="lazy" />
@@ -1266,9 +1270,6 @@
             <span>View prototype</span>
             <span aria-hidden="true">↗</span>
           </a>
-          <a href="index.html#work" class="btn btn-secondary">
-            <span>Back to work</span>
-          </a>
         </div>
       </section>
 
@@ -1279,9 +1280,9 @@
           <span class="section-pill">Reflection</span>
         </div>
         <h2>What I learned.</h2>
-        <p><strong>Constrain to clarify.</strong> The biggest unlock came from removing options — collapsing the filter tags and offering "Surprise Me" both reduced choices on the surface, but made the experience feel more inviting, not less capable.</p>
-        <p><strong>Test what matters most.</strong> The checkout flow worked smoothly out of the gate, but discovery — the part I'd considered "secondary" — turned out to be where users got stuck. Testing surfaced that early enough to course-correct.</p>
-        <p><strong>If I had more time…</strong> I'd validate the iterations with a follow-up round of usability testing, and explore a lightweight onboarding moment to set expectations before users land on Home for the first time.</p>
+        <p><strong>Less choice, more confidence.</strong> Reducing the number of options on screen made the app feel easier to use, not more limited. Collapsing the filter tags and adding a "Surprise Me" path both came from the same insight: when users feel overwhelmed before they've even started, they leave. Removing friction at the entry point was the most impactful design decision on this project.</p>
+        <p><strong>Test the parts you assume work.</strong> I spent the most design time on checkout, assuming it would be the hardest part to get right. Testing showed the opposite: checkout was fine, but the browse and discovery experience was where users got stuck.</p>
+        <p><strong>If I had more time.</strong> I would run a second round of usability testing on the iterated designs to validate that the changes actually solved the problems they were meant to. I would also explore an onboarding flow to set the right expectations before users hit the home screen for the first time.</p>
       </section>
 
     </article>
@@ -1293,19 +1294,17 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       All work
     </a>
-    <a href="game-revamp-case-study.html" class="bottom-nav-link">
-      Next case study: Electronic Arts
+    <a href="presto-heuristic-evaluation.html" class="bottom-nav-link">
+      Next case study: Presto
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </nav>
 
   <!-- Footer -->
   <footer class="footer">
-    <p>© 2026 Katie Lei · Toronto, ON</p>
+    <p>© 2026 Katie Lei</p>
     <div class="footer-links">
       <a href="mailto:katie.sinlei@gmail.com">Email</a>
-      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="#" target="_blank" rel="noopener">Dribbble</a>
     </div>
   </footer>
 
