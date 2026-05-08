@@ -4,163 +4,1068 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Katie Lei — UI/UX Designer</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================
+       Home — captivating cover, unified system
+    ========================================================= */
+    :root {
+      --bg:           #FAFAF9;
+      --bg-2:         #F4F3F0;
+      --bg-3:         #EAE8E3;
+      --rule:         #E5E3DD;
+      --rule-strong:  #D4D1C8;
+      --ink:          #1A1A1A;
+      --ink-2:        #4A4A48;
+      --ink-3:        #807E78;
+      --ink-4:        #B5B2A8;
+      --accent:       #C8543A;
+      --accent-soft:  #F8E8E2;
+      --success:      #2E7D4F;
+
+      --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+      --font-serif:   'Instrument Serif', Georgia, serif;
+
+      --sidebar-w:    240px;
+
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'cv11', 'ss01', 'kern';
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    /* =========================================================
+       Sidebar
+    ========================================================= */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      padding: 2.25rem 1.75rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--bg);
+      z-index: 100;
+    }
+
+    .sidebar::after {
+      content: '';
+      position: absolute;
+      top: 2.25rem; bottom: 1.75rem;
+      right: 0;
+      width: 1px;
+      background: var(--rule);
+    }
+
+    .sidebar-top { display: flex; flex-direction: column; gap: 2.5rem; }
+
+    .brand {
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .brand-name {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .brand-role {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+    }
+
+    .nav {
+      display: flex; flex-direction: column; gap: 0.05rem;
+    }
+    .nav a {
+      display: inline-block;
+      padding: 0.4rem 0;
+      font-size: 0.92rem;
+      color: var(--ink-2);
+      transition: color 200ms var(--ease), letter-spacing 250ms var(--ease);
+      width: fit-content;
+      position: relative;
+    }
+    .nav a:hover {
+      color: var(--ink);
+      letter-spacing: 0.005em;
+    }
+    .nav a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0.3rem;
+      width: 100%;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 300ms var(--ease);
+    }
+    .nav a:hover::after { transform: scaleX(1); }
+
+    .sidebar-bottom {
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+
+    .status {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-2);
+      width: fit-content;
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(46,125,79,0.15);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(46,125,79,0.15); }
+      50%       { box-shadow: 0 0 0 6px rgba(46,125,79,0.06); }
+    }
+
+    .socials {
+      display: flex; gap: 0.4rem;
+    }
+    .socials a {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      padding: 0.3rem 0;
+      transition: color 150ms;
+    }
+    .socials a:hover { color: var(--accent); }
+    .socials .sep { color: var(--ink-4); padding: 0.3rem 0.15rem; }
+
+    /* =========================================================
+       Main shell
+    ========================================================= */
+    .main {
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+    }
+
+    /* =========================================================
+       Hero
+    ========================================================= */
+    .hero {
+      min-height: 100vh;
+      padding: 5rem 5rem 4rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-top {
+      position: absolute;
+      top: 2.25rem; left: 5rem; right: 5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      letter-spacing: 0.02em;
+    }
+    .hero-top .tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .hero-top .tag-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .hero-greeting {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: rise 700ms var(--ease) 100ms forwards;
+    }
+    .hero-greeting-line {
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 9vw, 8.5rem);
+      font-weight: 600;
+      line-height: 0.96;
+      letter-spacing: -0.045em;
+      color: var(--ink);
+      margin-bottom: 2.5rem;
+      max-width: 14ch;
+      text-wrap: balance;
+    }
+    .hero-title .line {
+      display: block;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 800ms var(--ease) forwards;
+    }
+    .hero-title .line:nth-child(1) { animation-delay: 200ms; }
+    .hero-title .line:nth-child(2) { animation-delay: 320ms; }
+    .hero-title .line:nth-child(3) { animation-delay: 440ms; }
+
+    .hero-title .serif {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+    }
+
+    .hero-blob {
+      position: absolute;
+      top: 0; left: 0;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(200,84,58,0.18), rgba(200,84,58,0) 70%);
+      pointer-events: none;
+      filter: blur(20px);
+      z-index: 0;
+      will-change: transform;
+    }
+
+    .hero > *:not(.hero-blob) { position: relative; z-index: 1; }
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-foot {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 3rem;
+      flex-wrap: wrap;
+      max-width: 1100px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: rise 800ms var(--ease) 600ms forwards;
+    }
+
+    .hero-blurb {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      color: var(--ink-2);
+      max-width: 44ch;
+      text-wrap: pretty;
+    }
+    .hero-blurb em {
+      font-family: var(--font-serif);
+      font-size: 1.25em;
+      font-style: italic;
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 1.1rem 1.6rem;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 9999px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: background 200ms, gap 250ms var(--ease), transform 250ms var(--ease);
+      flex-shrink: 0;
+    }
+    .hero-cta:hover {
+      background: var(--accent);
+      gap: 0.9rem;
+    }
+    .hero-cta-arrow {
+      display: inline-block;
+      transition: transform 250ms var(--ease);
+    }
+    .hero-cta:hover .hero-cta-arrow {
+      transform: translateX(2px) rotate(-45deg);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.25rem; left: 5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .hero-scroll-line {
+      width: 28px; height: 1px;
+      background: var(--ink-3);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-scroll-line::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      animation: scroll-hint 2.4s ease-in-out infinite;
+    }
+    @keyframes scroll-hint {
+      0%   { transform: translateX(-100%); }
+      50%  { transform: translateX(0); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* =========================================================
+       Marquee
+    ========================================================= */
+    .marquee {
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      overflow: hidden;
+      white-space: nowrap;
+      background: var(--bg);
+      position: relative;
+    }
+    .marquee-track {
+      display: inline-flex;
+      gap: 4rem;
+      animation: marq 38s linear infinite;
+      will-change: transform;
+    }
+    .marquee-item {
+      font-family: var(--font-serif);
+      font-size: 2.25rem;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      flex-shrink: 0;
+    }
+    .marquee-item.alt { color: var(--accent); }
+    .marquee-dot {
+      align-self: center;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--ink-4);
+      flex-shrink: 0;
+    }
+    @keyframes marq {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* =========================================================
+       Work — hover gallery
+    ========================================================= */
+    .work {
+      padding: 7rem 5rem 6rem;
+      position: relative;
+    }
+
+    .work-intro {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 3rem;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+    }
+    .work-headline {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--ink);
+      max-width: 22ch;
+      text-wrap: balance;
+    }
+    .work-headline .serif {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 400;
+    }
+    .work-count {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      letter-spacing: 0.04em;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem 2.5rem;
+    }
+    @media (max-width: 900px) {
+      .gallery { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+
+    .project {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .project:nth-child(2) { margin-top: 4rem; }
+    .project:nth-child(4) { margin-top: 4rem; }
+    @media (max-width: 900px) {
+      .project:nth-child(2), .project:nth-child(4) { margin-top: 0; }
+    }
+
+    .project-image {
+      display: block;
+      aspect-ratio: 4/3;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      position: relative;
+    }
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 700ms var(--ease);
+    }
+    .project-image--contain img {
+      object-fit: contain;
+      padding: 2rem;
+    }
+    .project-image:hover img { transform: scale(1.04); }
+    .project-image::after {
+      content: 'View case study \2192';
+      position: absolute;
+      inset: auto auto 1rem 1rem;
+      padding: 0.5rem 0.85rem;
+      background: rgba(26,26,26,0.92);
+      color: var(--bg);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      border-radius: 9999px;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 220ms var(--ease), transform 220ms var(--ease);
+    }
+    .project-image:hover::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .project-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0 0.25rem;
+    }
+    .project-tags {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      letter-spacing: 0.02em;
+    }
+    .project-tags .dot { color: var(--ink-4); }
+    .project-name {
+      font-size: clamp(1.5rem, 2.4vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--ink);
+      transition: color 200ms;
+    }
+    .project-name .serif {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      color: inherit;
+    }
+    .project:hover .project-name { color: var(--accent); }
+    .project-desc {
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--ink-2);
+      max-width: 42ch;
+      text-wrap: pretty;
+      margin-top: 0.25rem;
+    }
+
+    /* =========================================================
+       About — editorial
+    ========================================================= */
+    .about {
+      padding: 7rem 5rem 6rem;
+      background: var(--bg-2);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .about-trinket {
+      position: absolute;
+      top: 5rem; right: 4rem;
+      width: 84px; height: 84px;
+      color: var(--accent);
+      opacity: 0.85;
+      animation: spin 18s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .about-trinket--small {
+      top: auto; bottom: 5rem;
+      right: auto; left: 28%;
+      width: 36px; height: 36px;
+      color: var(--ink-3);
+      animation: spin 26s linear reverse infinite;
+      opacity: 0.6;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 900px) {
+      .about-trinket { right: 1rem; top: 2rem; width: 56px; height: 56px; }
+      .about-trinket--small { display: none; }
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      align-items: start;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    .about-photo {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .about-photo img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--rule);
+    }
+    .about-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .about-body p {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      color: var(--ink-2);
+      max-width: 44ch;
+      text-wrap: pretty;
+    }
+    .about-greeting { margin-bottom: 0; }
+    .about-name {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+      font-size: 1.1em;
+    }
+    .about-body p + p { margin-top: 1.25rem; }
+    .about-body em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 400;
+      font-size: 1.1em;
+    }
+
+    .about-stack {
+      margin-top: 2.5rem;
+      display: flex; flex-direction: column;
+      gap: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-2);
+    }
+    .about-stack-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .about-stack-row:last-child { border-bottom: none; }
+    .about-stack-key {
+      color: var(--ink-3);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+    }
+    .about-stack-val { color: var(--ink); }
+
+    .about-now {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    @media (max-width: 700px) {
+      .about-now { grid-template-columns: 1fr; }
+    }
+    .about-now-cell {
+      position: relative;
+      background: var(--bg-2);
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: background 240ms var(--ease);
+      overflow: hidden;
+      cursor: default;
+    }
+    .about-now-cell:hover { background: var(--bg); }
+    .about-now-cell::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 400ms var(--ease);
+    }
+    .about-now-cell:hover::after { transform: scaleX(1); }
+    .about-now-key {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .about-now-key .pulse {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+      animation: pulse2 2s ease-in-out infinite;
+    }
+    @keyframes pulse2 {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .about-now-val {
+      font-size: 0.95rem;
+      color: var(--ink);
+      line-height: 1.35;
+      min-height: 2.5rem;
+      display: block;
+    }
+    .about-now-val .swap {
+      display: inline-block;
+      transition: opacity 320ms var(--ease), transform 320ms var(--ease);
+    }
+    .about-now-val .swap.is-out {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    .about-now-val .serif {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    /* =========================================================
+       Contact
+    ========================================================= */
+    .contact {
+      padding: 9rem 5rem 7rem;
+      position: relative;
+    }
+    .contact-line {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--ink);
+      max-width: 28ch;
+      text-wrap: balance;
+      margin-bottom: 2.25rem;
+    }
+    .contact-line .serif {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 400;
+    }
+    .contact-mail {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.95rem 1.5rem;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 9999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: -0.005em;
+      transition: background 240ms, gap 280ms var(--ease), transform 240ms var(--ease);
+    }
+    .contact-mail:hover {
+      background: var(--accent);
+      gap: 0.95rem;
+    }
+    .contact-mail-arrow {
+      display: inline-block;
+      transition: transform 280ms var(--ease);
+    }
+    .contact-mail:hover .contact-mail-arrow {
+      transform: translateX(2px) rotate(-45deg);
+    }
+
+    .contact-foot {
+      margin-top: 5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .contact-foot a:hover { color: var(--accent); }
+
+    /* =========================================================
+       Focus
+    ========================================================= */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* =========================================================
+       Responsive
+    ========================================================= */
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar {
+        position: sticky; top: 0;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.25rem;
+        background: rgba(250,250,249,0.92);
+        backdrop-filter: saturate(140%) blur(10px);
+        -webkit-backdrop-filter: saturate(140%) blur(10px);
+        border-bottom: 1px solid var(--rule);
+      }
+      .sidebar::after { display: none; }
+      .sidebar-top { flex-direction: row; align-items: center; gap: 1.5rem; }
+      .nav { flex-direction: row; gap: 1rem; }
+      .nav a { padding: 0.3rem 0; font-size: 0.85rem; }
+      .brand-role, .sidebar-bottom { display: none; }
+      .main { margin-left: 0; }
+
+      .hero { padding: 4rem 1.5rem 3rem; }
+      .hero-top { left: 1.5rem; right: 1.5rem; top: 1.5rem; }
+      .hero-scroll { left: 1.5rem; bottom: 1.5rem; }
+
+      .work, .about, .contact { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .work { padding-top: 4rem; padding-bottom: 4rem; }
+      .about { padding-top: 4rem; padding-bottom: 4rem; }
+      .contact { padding-top: 5rem; padding-bottom: 4rem; }
+
+      .marquee-item { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 560px) {
+      .nav a:not(:last-child) { display: none; }
+    }
+  </style>
 </head>
 <body>
 
   <!-- SIDEBAR -->
-  <aside class="site-sidebar">
+  <aside class="sidebar">
     <div class="sidebar-top">
-      <a href="index.html" class="site-title">Katie Lei</a>
-      <nav class="site-nav">
+      <a href="index.html" class="brand">
+        <span class="brand-name">Katie Lei</span>
+        <span class="brand-role">UI/UX Designer</span>
+      </a>
+
+      <nav class="nav">
         <a href="#intro">Intro</a>
         <a href="#work">Work</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
+
     <div class="sidebar-bottom">
-      <p class="copyright">© 2026 Katie Lei</p>
+      <div class="socials">
+        <a href="mailto:katie.sinlei@gmail.com">Email</a>
+      </div>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
-  <main class="site-main">
+  <!-- MAIN -->
+  <main class="main">
 
     <!-- HERO -->
     <section class="hero" id="intro">
-      <div class="hero-inner">
-        <p class="hero-greeting">Hi there!</p>
-        <h1 class="hero-title">I'm Katie Lei, a UI/UX designer crafting digital experiences that are both beautiful and intuitive.</h1>
-        <div class="hero-buttons">
-          <a href="#contact" class="btn btn-primary">Get In Touch</a>
-          <a href="#work" class="btn btn-outline">View Work</a>
-        </div>
-      </div>
-    </section>
+      <div class="hero-blob" id="hero-blob"></div>
 
-    <!-- ABOUT -->
-    <section class="about-cols" id="about">
-      <div class="about-col">
-        <p>I design products from the ground up — research, wireframes, prototypes, and polished UI. My process is grounded in empathy for the user and clarity in communication, so every decision has a reason behind it.</p>
+      <p class="hero-greeting">
+        <span class="hero-greeting-line"></span>
+        <span>Hi There, I'm Katie!</span>
+      </p>
+
+      <h1 class="hero-title">
+        <span class="line">Designing</span>
+        <span class="line">digital things</span>
+        <span class="line">that <span class="serif">feel right.</span></span>
+      </h1>
+
+      <div class="hero-foot">
+        <p class="hero-blurb">
+          UI/UX designer based in Toronto. I make products that are <em>beautiful</em>, intuitive, and grounded in user needs.
+        </p>
+        <a href="#work" class="hero-cta">
+          See selected work
+          <span class="hero-cta-arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
-      <div class="about-col">
-        <p>Based in Toronto, Canada. Currently open to full-time roles and select freelance projects. I love working with teams who care about craft and are building things that matter.</p>
-      </div>
+
     </section>
 
     <!-- WORK -->
     <section class="work" id="work">
-      <h2 class="section-label">Work</h2>
-      <div class="work-grid">
+      <header class="work-intro">
+        <h2 class="work-headline">
+          <span class="serif">Featured work.</span>
+        </h2>
+      </header>
 
-        <!-- BAKEBASKET — Project 1 -->
-        <article class="work-card">
-          <a href="bakebasket-case-study.html" class="work-card-image work-card-image--link">
-            <img
-              src="images/bakebasket%20display.png"
-              alt="Bake Basket app cover"
-              loading="lazy"
-            />
-          </a>
-          <div class="work-card-body">
-            <span class="work-tag">Mobile App · iOS &amp; Android · UX Research</span>
-            <h3>Bake Basket</h3>
-            <p>A mobile e-commerce app that lowers the barrier to baking by replacing full ingredient shopping with pre-portioned kits. Designed around the insight that beginner bakers drop off before they start.</p>
-            <a href="bakebasket-case-study.html" class="work-link">View Case Study →</a>
-          </div>
-        </article>
+      <div class="gallery">
 
-        <article class="work-card">
-          <a href="presto-heuristic-evaluation.html" class="work-card-image work-card-image--link">
-            <img
-              src="images/presto/presto.jpg"
-              alt="Presto Heuristic Evaluation cover"
-              loading="lazy"
-            />
-          </a>
-          <div class="work-card-body">
-            <span class="work-tag">Heuristic Evaluation · UX Research</span>
-            <h3>prestocard.ca</h3>
-            <p>A heuristic evaluation of the Add Funds flow on prestocard.ca. I identified usability gaps, mapped them against Nielsen's 10 heuristics, and translated findings into prioritized design opportunities with concrete solutions for where the experience was costing users the most.</p>
-            <a href="presto-heuristic-evaluation.html" class="work-link">View Case Study →</a>
-          </div>
-        </article>
+        <a href="bakebasket-case-study.html" class="project">
+          <span class="project-image">
+            <img src="images/bakebasket%20display.png" alt="Bake Basket app cover" loading="lazy">
+          </span>
+          <span class="project-meta">
+            <span class="project-tags">
+              <span>Mobile App</span><span class="dot">·</span>
+              <span>iOS &amp; Android</span><span class="dot">·</span>
+              <span>UX Research</span>
+            </span>
+            <span class="project-name">Bake Basket</span>
+            <span class="project-desc">A mobile e-commerce app that lowers the barrier to baking by replacing full ingredient shopping with pre-portioned kits. Designed around the insight that beginner bakers drop off before they start.</span>
+          </span>
+        </a>
 
-        <article class="work-card">
-          <a href="game-revamp-case-study.html" class="work-card-image work-card-image--link">
-            <img
-              src="images/ea.jpg"
-              alt="Electronic Arts project cover"
-              loading="lazy"
-            />
-          </a>
-          <div class="work-card-body">
-            <span class="work-tag">Game UI · UI Redesign</span>
-            <h3>Electronic Arts</h3>
-            <p>Low early retention rates pointed to a first impression problem. We redesigned the onboarding and character customization experience of a nearly decade-old game whose UI had long stopped serving the players using it.</p>
-            <a href="game-revamp-case-study.html" class="work-link">View Case Study →</a>
-          </div>
-        </article>
+        <a href="presto-heuristic-evaluation.html" class="project">
+          <span class="project-image">
+            <img src="images/presto/presto.jpg" alt="Presto Heuristic Evaluation cover" loading="lazy">
+          </span>
+          <span class="project-meta">
+            <span class="project-tags">
+              <span>Heuristic Eval</span><span class="dot">·</span>
+              <span>UX Research</span><span class="dot">·</span>
+              <span>Transit</span>
+            </span>
+            <span class="project-name">prestocard.ca</span>
+            <span class="project-desc">A heuristic evaluation of the Add Funds flow on prestocard.ca. I identified usability gaps, mapped them against Nielsen's 10 heuristics, and delivered prioritized fixes for where the experience breaks down most.</span>
+          </span>
+        </a>
 
-        <!-- VOLLEYBALL BRANDING — Project 4 -->
-        <article class="work-card">
-          <a href="volleyball-branding-case-study.html" class="work-card-image work-card-image--link">
-            <img
-              src="images/Orcas/logo.png"
-              alt="Orcas brand identity cover"
-              loading="lazy"
-            />
-          </a>
-          <div class="work-card-body">
-            <span class="work-tag">Product Design · Brand Identity · Merch</span>
-            <h3>Orcas</h3>
-            <p>An end-to-end brand identity for a competitive volleyball organization. Developed the full visual system from brief to final deliverables, including logo suite, color palette, type system, and jersey design.</p>
-            <a href="volleyball-branding-case-study.html" class="work-link">View Case Study →</a>
-          </div>
-        </article>
+        <a href="game-revamp-case-study.html" class="project">
+          <span class="project-image">
+            <img src="images/ea.jpg" alt="Electronic Arts project cover" loading="lazy">
+          </span>
+          <span class="project-meta">
+            <span class="project-tags">
+              <span>Game UI</span><span class="dot">·</span>
+              <span>UI Redesign</span><span class="dot">·</span>
+              <span>Onboarding</span>
+            </span>
+            <span class="project-name">Electronic Arts</span>
+            <span class="project-desc">Low early retention rates pointed to a first impression problem. We redesigned the onboarding and character customization experience of a nearly decade-old game whose UI had long stopped serving the players using it.</span>
+          </span>
+        </a>
+
+        <a href="volleyball-branding-case-study.html" class="project">
+          <span class="project-image project-image--contain">
+            <img src="images/Orcas/logo.png" alt="Orcas brand identity cover" loading="lazy">
+          </span>
+          <span class="project-meta">
+            <span class="project-tags">
+              <span>Brand Identity</span><span class="dot">·</span>
+              <span>Product Design</span><span class="dot">·</span>
+              <span>Merch</span>
+            </span>
+            <span class="project-name">Orcas</span>
+            <span class="project-desc">An end-to-end brand identity for a competitive volleyball organization. Developed the full visual system from brief to final deliverables, including logo suite, color palette, type system, and jersey design.</span>
+          </span>
+        </a>
 
       </div>
     </section>
 
-    <!-- SKILLS -->
-    <section class="skills">
-      <h2 class="section-label">What I Do</h2>
-      <div class="skills-grid">
-        <div class="skill-item">
-          <h3>UX Research</h3>
-          <p>User interviews, usability testing, competitive analysis, and synthesizing insights into actionable design decisions.</p>
+    <!-- ABOUT -->
+    <section class="about" id="about">
+      <svg class="about-trinket" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><path d="M50 4 L54 42 L92 38 L60 50 L92 62 L54 58 L50 96 L46 58 L8 62 L40 50 L8 38 L46 42 Z"/></svg>
+      <svg class="about-trinket about-trinket--small" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><path d="M50 4 L54 42 L92 38 L60 50 L92 62 L54 58 L50 96 L46 58 L8 62 L40 50 L8 38 L46 42 Z"/></svg>
+
+      <div class="about-grid">
+        <div class="about-photo">
+          <span class="about-label">About</span>
+          <img src="images/me.JPG" alt="Katie Lei" />
         </div>
-        <div class="skill-item">
-          <h3>Product Design</h3>
-          <p>End-to-end design — from low-fidelity wireframes to pixel-perfect prototypes in Figma.</p>
-        </div>
-        <div class="skill-item">
-          <h3>Design Systems</h3>
-          <p>Building scalable component libraries and style guides that keep teams aligned and shipping fast.</p>
-        </div>
-        <div class="skill-item">
-          <h3>Visual Design</h3>
-          <p>Typography, color, layout, and motion — the details that turn functional into memorable.</p>
+
+        <div class="about-body">
+          <p class="about-greeting">Hi there, I'm <span class="about-name">Katie</span>!</p>
+          <p>
+            I'm a Toronto-based <em>UI/UX designer</em> with a background in Game Design. During my years working in the <em>mobile games industry</em>, I've worked on many different things including 2D art, concept work, promotional material, UI design, and user testing.
+          </p>
+          <p>
+            During my time in games, I found myself really drawn to the <em>UI/UX side</em> of things. I loved digging into where things weren't working for users and finding ways to make the experience better. It felt natural to me and just felt like the right fit, so I decided to <em>transition into UI/UX</em> and make it my focus.
+          </p>
+          <p>
+            With my background in art, it gave me a strong foundation for the <em>visual craft</em> side of design. And pairing that with user research and identifying opportunities in the experience is what shapes how I approach <em>UI/UX work</em> today.
+          </p>
+          <p>
+            In my free time I love staying active! I spend most of my time taking <em>dance lessons</em> and playing <em>volleyball</em>. ✨
+          </p>
+
+          <div class="about-stack">
+            <div class="about-stack-row">
+              <span class="about-stack-key">Tools</span>
+              <span class="about-stack-val">Figma · Adobe Creative Suite · Canva · Miro · Figjam · Jira</span>
+            </div>
+            <div class="about-stack-row">
+              <span class="about-stack-key">Skills</span>
+              <span class="about-stack-val">User Research · Information Architecture · Wireframing · Prototyping · Usability Testing</span>
+            </div>
+            <div class="about-stack-row">
+              <span class="about-stack-key">Interests</span>
+              <span class="about-stack-val">Art · Games · Dancing · Volleyball · Bubble Tea</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
 
     <!-- CONTACT -->
     <section class="contact" id="contact">
-      <div class="contact-inner">
-        <h2>Let's work together.</h2>
-        <p>Have a project in mind or just want to say hi? I'd love to hear from you.</p>
-        <a href="mailto:katie.sinlei@gmail.com" class="btn btn-primary">Say Hello</a>
+      <h2 class="contact-line">
+        Let's <span class="serif">connect!</span> Feel free to reach out, I'd love to hear from you!
+      </h2>
+
+      <a href="mailto:katie.sinlei@gmail.com" class="contact-mail">
+        Get in touch
+        <span class="contact-mail-arrow" aria-hidden="true">↗</span>
+      </a>
+
+      <div class="contact-foot">
+        <span>© 2026 Katie Lei</span>
+        <a href="mailto:katie.sinlei@gmail.com">Email</a>
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <p>© 2026 Katie Lei &nbsp;·&nbsp; Designed with care</p>
-    </footer>
-
   </main>
+
+  <script>
+    // Toronto clock
+    (function () {
+      const el = document.getElementById('clock');
+      if (!el) return;
+      const update = () => {
+        const opts = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Toronto' };
+        el.textContent = 'Toronto · ' + new Intl.DateTimeFormat('en-CA', opts).format(new Date());
+      };
+      update();
+      setInterval(update, 30000);
+    })();
+
+    // Hero cursor-following blob
+    (function () {
+      const hero = document.getElementById('intro');
+      const blob = document.getElementById('hero-blob');
+      if (!hero || !blob) return;
+      let tx = 0, ty = 0, cx = 0, cy = 0;
+      let active = false;
+
+      hero.addEventListener('pointermove', (e) => {
+        const r = hero.getBoundingClientRect();
+        tx = e.clientX - r.left;
+        ty = e.clientY - r.top;
+        if (!active) { cx = tx; cy = ty; }
+        active = true;
+      });
+      hero.addEventListener('pointerleave', () => { active = false; });
+
+      function loop() {
+        if (active) {
+          cx += (tx - cx) * 0.05;
+          cy += (ty - cy) * 0.05;
+          blob.style.transform = `translate(${cx - 260}px, ${cy - 260}px)`;
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    })();
+
+  </script>
 
 </body>
 </html>
